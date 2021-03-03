@@ -10,7 +10,7 @@
 
 
 void state_init() {
-    game->state = malloc(sizeof(window_t));
+    game->state = malloc(sizeof(state_t));
     if (game->state == NULL) {
         printf("Could not allocate memory for window\n");
         exit(-1);

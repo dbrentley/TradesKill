@@ -9,7 +9,7 @@
 #include "stdlib.h"
 
 void timer_init() {
-    game->timer = malloc(sizeof(window_t));
+    game->timer = malloc(sizeof(timer_t));
     if (game->timer == NULL) {
         printf("Could not allocate memory for window\n");
         exit(-1);
