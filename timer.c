@@ -38,7 +38,9 @@ void timer_end() {
         game->timer->fps = game->timer->frame_count;
         game->timer->frame_count = 0;
         game->timer->previous_time = game->timer->time;
-        fprintf(stderr, "FPS: %i\n", game->timer->fps);
+#ifdef DEBUG_FPS
+        printf("FPS: %i\n", game->timer->fps);
+#endif
     }
 }
 

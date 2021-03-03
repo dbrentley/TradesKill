@@ -29,7 +29,7 @@ GLFWcursor *custom_cursor() {
 
     GLFWcursor *cursor = glfwCreateCursor(&cursor_image, 0, 0);
     if (cursor == NULL) {
-        fprintf(stderr, "Could not create cursor\n");
+        printf("Could not create cursor\n");
         exit(-1);
     }
     glfwSetCursor(game->window->gl_window, cursor);

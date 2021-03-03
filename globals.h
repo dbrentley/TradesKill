@@ -5,10 +5,12 @@
 #ifndef TRADESKILL_GLOBALS_H
 #define TRADESKILL_GLOBALS_H
 
+#define DEBUG_FPS
+#define GLEW_STATIC
+
 #define DEFAULT_WIDTH 1280
 #define DEFAULT_HEIGHT 720
 
-#define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 

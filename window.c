@@ -80,7 +80,7 @@ void window_init(char *title) {
             game->window->width, game->window->height, title, NULL, NULL);
     if (!game->window->gl_window) {
         glfwTerminate();
-        fprintf(stderr, "Could not create window\n");
+        printf("Could not create window\n");
         exit(-1);
     }
 
@@ -103,8 +103,8 @@ void window_init(char *title) {
 
     const GLubyte *renderer = glGetString(GL_RENDERER);// get renderer string
     const GLubyte *version = glGetString(GL_VERSION);  // version as a string
-    fprintf(stderr, "Renderer: %s\n", renderer);
-    fprintf(stderr, "OpenGL version supported %s\n", version);
+    printf("Renderer: %s\n", renderer);
+    printf("OpenGL version supported %s\n", version);
 
     // enable depth testing
     glEnable(GL_DEPTH_TEST);
