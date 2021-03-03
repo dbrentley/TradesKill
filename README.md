@@ -12,7 +12,7 @@ $ sudo apt install cmake libglew-dev libglfw3-dev libstb-dev
 ## Build
 
 ```shell
-$ https://github.com/dbrentley/TradesKill.git
+$ git clone https://github.com/dbrentley/TradesKill.git
 $ cd TradesKill
 $ mkdir build && cd build
 $ cmake ..
