@@ -6,7 +6,7 @@ combat (Kill).
 ## Dependencies
 
 ```shell
-$ sudo apt install cmake libglew-dev libglfw3-dev libstb-dev
+$ sudo apt install cmake libglew-dev libglfw3-dev libstb-dev libfreetype-dev
 ```
 
 ## Build
