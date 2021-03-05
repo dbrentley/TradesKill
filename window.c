@@ -6,6 +6,7 @@
 #include "game.h"
 #include "globals.h"
 #include "keyboard.h"
+#include "logger.h"
 #include "state.h"
 #include "stdio.h"
 
@@ -33,7 +34,7 @@ void window_close_callback(GLFWwindow *gl_window) {
 }
 
 void error_callback(int error, const char *description) {
-    printf("Error: %s\n", description);
+    logline(ERROR, "Error: %s", description);
 }
 
 void resize_callback(GLFWwindow *gl_window, int width, int height) {
@@ -46,19 +47,19 @@ void resize_callback(GLFWwindow *gl_window, int width, int height) {
 
 void window_init(char *title) {
     if (!glfwInit()) {
-        printf("Could not initialize GLFW\n");
+        logline(ERROR, "Could not initialize GLFW");
         exit(-1);
     }
 
     game->window = malloc(sizeof(window_t));
     if (game->window == NULL) {
-        printf("Could not allocate memory for window\n");
+        logline(ERROR, "Could not allocate memory for window");
         exit(-1);
     }
 
     game->window->gl_window = malloc(sizeof(GLFWwindow *));
     if (game->window->gl_window == NULL) {
-        printf("Could not allocate memory for GL window\n");
+        logline(ERROR, "Could not allocate memory for GL window");
         exit(-1);
     }
 
@@ -80,7 +81,7 @@ void window_init(char *title) {
             game->window->width, game->window->height, title, NULL, NULL);
     if (!game->window->gl_window) {
         glfwTerminate();
-        printf("Could not create window\n");
+        logline(ERROR, "Could not create window");
         exit(-1);
     }
 
@@ -103,8 +104,8 @@ void window_init(char *title) {
 
     const GLubyte *renderer = glGetString(GL_RENDERER);// get renderer string
     const GLubyte *version = glGetString(GL_VERSION);  // version as a string
-    printf("Renderer: %s\n", renderer);
-    printf("OpenGL version supported %s\n", version);
+    logline(INFO, "Renderer: %s", renderer);
+    logline(INFO, "OpenGL version supported %s", version);
 
     // enable depth testing
     glEnable(GL_DEPTH_TEST);

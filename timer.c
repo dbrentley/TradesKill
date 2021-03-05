@@ -5,13 +5,14 @@
 #include "timer.h"
 #include "game.h"
 #include "globals.h"
+#include "logger.h"
 #include "stdio.h"
 #include "stdlib.h"
 
 void timer_init() {
-    game->timer = malloc(sizeof(timer_t));
+    game->timer = malloc(sizeof(game_timer_t));
     if (game->timer == NULL) {
-        printf("Could not allocate memory for window\n");
+        logline(ERROR, "Could not allocate memory for window");
         exit(-1);
     }
 
@@ -39,7 +40,7 @@ void timer_end() {
         game->timer->frame_count = 0;
         game->timer->previous_time = game->timer->time;
 #ifdef DEBUG_FPS
-        printf("FPS: %i\n", game->timer->fps);
+        logline(DEBUG, "FPS: %i", game->timer->fps);
 #endif
     }
 }

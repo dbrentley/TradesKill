@@ -5,6 +5,7 @@
 #include "mouse.h"
 #include "game.h"
 #include "globals.h"
+#include "logger.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,7 +30,7 @@ GLFWcursor *custom_cursor() {
 
     GLFWcursor *cursor = glfwCreateCursor(&cursor_image, 0, 0);
     if (cursor == NULL) {
-        printf("Could not create cursor\n");
+        logline(ERROR, "Could not create cursor");
         exit(-1);
     }
     glfwSetCursor(game->window->gl_window, cursor);

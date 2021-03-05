@@ -3,6 +3,7 @@
 //
 
 #include "game.h"
+#include "logger.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,7 +13,7 @@ game_t *game;
 void game_init(char *name) {
     game = malloc(sizeof(game_t));
     if (game == NULL) {
-        printf("Could not initialize game\n");
+        logline(ERROR, "Could not initialize game");
         exit(-1);
     }
 

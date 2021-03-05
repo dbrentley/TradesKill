@@ -1,5 +1,6 @@
 #include "game.h"
 #include "globals.h"
+#include "logger.h"
 #include "timer.h"
 
 #include <stdio.h>
@@ -25,6 +26,7 @@ int main() {
     }
 
     game_destroy();
-    printf("Game exiting\n");
+    logline(INFO, "Exiting");
+
     return 0;
 }

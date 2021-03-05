@@ -4,7 +4,7 @@
 
 #include "state.h"
 #include "game.h"
-#include "globals.h"
+#include "logger.h"
 #include "stdio.h"
 #include "stdlib.h"
 
@@ -12,7 +12,7 @@
 void state_init() {
     game->state = malloc(sizeof(state_t));
     if (game->state == NULL) {
-        printf("Could not allocate memory for window\n");
+        logline(ERROR, "Could not allocate memory for window");
         exit(-1);
     }
 }
