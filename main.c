@@ -3,8 +3,6 @@
 #include "logger.h"
 #include "timer.h"
 
-#include <stdio.h>
-
 game_t *game;
 
 int main() {
@@ -14,7 +12,6 @@ int main() {
     while (!game->window->should_close) {
         timer_start();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
         // poll for events
         glfwPollEvents();

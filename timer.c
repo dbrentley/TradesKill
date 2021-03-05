@@ -39,7 +39,7 @@ void timer_end() {
         game->timer->fps = game->timer->frame_count;
         game->timer->frame_count = 0;
         game->timer->previous_time = game->timer->time;
-#ifdef DEBUG_FPS
+#ifdef DEBUG_ON
         logline(DEBUG, "FPS: %i", game->timer->fps);
 #endif
     }

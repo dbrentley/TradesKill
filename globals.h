@@ -5,7 +5,7 @@
 #ifndef TRADESKILL_GLOBALS_H
 #define TRADESKILL_GLOBALS_H
 
-#define DEBUG_FPS
+#define DEBUG_ON
 #define GLEW_STATIC
 
 #define DEFAULT_WIDTH 1280
