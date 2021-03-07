@@ -4,7 +4,6 @@
 
 #include "window.h"
 #include "game.h"
-#include "globals.h"
 #include "keyboard.h"
 #include "logger.h"
 #include "state.h"

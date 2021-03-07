@@ -16,4 +16,5 @@
 
 #include "linmath.h"
 
+
 #endif//TRADESKILL_GLOBALS_H

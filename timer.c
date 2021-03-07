@@ -8,6 +8,7 @@
 #include "logger.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include "utils.h"
 
 void timer_init() {
     game->timer = malloc(sizeof(game_timer_t));
@@ -46,8 +47,5 @@ void timer_end() {
 }
 
 void timer_destroy() {
-    if (game->timer != NULL) {
-        free(game->timer);
-        game->timer = NULL;
-    }
+    ffree(game->timer);
 }
