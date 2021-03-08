@@ -48,10 +48,10 @@ void game_init(char *name) {
             -0.5f, 0.5f,  1.0f, 0.0f,// ur 2
             -1.5f, 0.5f,  0.0f, 0.0f,// ul 3
 
-            0.5f,  -0.5f, 0.0f, 1.0f,// ll 4
-            1.5f,  -0.5f, 1.0f, 1.0f,// lr 5
-            1.5f,  0.5f,  1.0f, 0.0f,// ur 6
-            0.5f,  0.5f,  0.0f, 0.0f,// ul 7
+            5.0f,  -0.5f, 0.0f, 1.0f,// ll 4
+            6.0f,  -0.5f, 1.0f, 1.0f,// lr 5
+            6.0f,  0.5f,  1.0f, 0.0f,// ur 6
+            5.0f,  0.5f,  0.0f, 0.0f,// ul 7
     };
     memcpy(game->gle->vertex_buffer, vb, 32 * sizeof(float));
 
