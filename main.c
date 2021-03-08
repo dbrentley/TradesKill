@@ -22,10 +22,13 @@ int main() {
         timer_start();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(default_program);
-
-        for (int x = 0; x < game->current_scene->sprite_size; x++) {
-            game->current_scene->sprites[x]->update(game->current_scene->sprites[x]);
+        glUniformMatrix4fv(mvp_uniform, 1, GL_FALSE,
+                           (const GLfloat *) game->window->mvp);
+        if (game->window->update_aspect) {
+            set_aspect(game->window->width, game->window->height);
+            game->window->update_aspect = false;
         }
+        game_render();
 
         // poll for events
         glfwPollEvents();

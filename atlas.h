@@ -8,6 +8,11 @@
 #include "globals.h"
 
 typedef struct {
+    float x;
+    float y;
+} atlas_offset_t;
+
+typedef struct {
     char *filename;
     int width;
     int height;

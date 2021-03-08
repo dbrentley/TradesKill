@@ -6,8 +6,10 @@
 #include "game.h"
 #include "keyboard.h"
 #include "logger.h"
+#include "mouse.h"
 #include "state.h"
 #include "stdio.h"
+#include "utils.h"
 
 #include <stdlib.h>
 
@@ -15,6 +17,9 @@ void set_aspect(int width, int height) {
     float aspect = (float) width / (float) height;
     glViewport(0, 0, width, height);
     gluOrtho2D(0.0f, (float) width, (float) height, 0.0f);
+    game->window->width = width;
+    game->window->height = height;
+    game->window->aspect = aspect;
     float zoom = game->window->zoom;
 
     mat4x4 m, p;
@@ -22,9 +27,6 @@ void set_aspect(int width, int height) {
     mat4x4_ortho(p, -aspect * zoom, aspect * zoom, -zoom, zoom, 1.0f, -1.0f);
     mat4x4_mul(game->window->mvp, p, m);
 
-    game->window->width = width;
-    game->window->height = height;
-    game->window->aspect = aspect;
     game->window->update_aspect = true;
 }
 
@@ -42,6 +44,7 @@ void resize_callback(GLFWwindow *gl_window, int width, int height) {
     resize_event.width = width;
     resize_event.height = height;
     game->window->resize_event = resize_event;
+    set_aspect(width, height);
 }
 
 void window_init(char *title) {
@@ -73,7 +76,7 @@ void window_init(char *title) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
     // glfwWindowHint(GLFW_SAMPLES, 4); // anti-alias
 
     game->window->gl_window = glfwCreateWindow(
@@ -88,8 +91,8 @@ void window_init(char *title) {
     glfwSetKeyCallback(game->window->gl_window, keyboard_event);
 
     // mouse
-    //glfwSetCursorPosCallback(window, cursor_position_callback);
-    //glfwSetScrollCallback(window, scroll_callback);
+    glfwSetCursorPosCallback(game->window->gl_window, cursor_position_callback);
+    glfwSetScrollCallback(game->window->gl_window, scroll_callback);
 
     // window
     glfwSetErrorCallback(error_callback);
@@ -101,7 +104,7 @@ void window_init(char *title) {
     glewExperimental = GL_TRUE;
     glewInit();
 
-    const GLubyte *renderer = glGetString(GL_RENDERER);// get renderer string
+    const GLubyte *renderer = glGetString(GL_RENDERER);// get render string
     const GLubyte *version = glGetString(GL_VERSION);  // version as a string
     logline(INFO, "Renderer: %s", renderer);
     logline(INFO, "OpenGL version supported %s", version);
@@ -110,14 +113,13 @@ void window_init(char *title) {
     glEnable(GL_DEPTH_TEST);
     // depth-testing interprets a smaller value as "closer"
     glDepthFunc(GL_LESS);
+
+    //glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
+
+    set_aspect(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
 
 void window_destroy() {
-    if (game->window != NULL) {
-        if (game->window->gl_window != NULL) {
-            free(game->window->gl_window);
-            game->window->gl_window = NULL;
-        }
-        free(game->window);
-    }
+    ffree(game->window->gl_window);
+    ffree(game->window);
 }

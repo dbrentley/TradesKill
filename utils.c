@@ -14,9 +14,9 @@ void ffree(void *obj) {
     }
 }
 
-void checkm(void *obj, char *name) {
+void checkm(void *obj) {
     if (obj == NULL) {
-        logline(ERROR, "Could not allocate memory for %s", name);
+        logline(ERROR, "Could not allocate memory for object");
         exit(-1);
     }
 }

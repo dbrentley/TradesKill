@@ -27,16 +27,18 @@ void atlas_init(char *filename, float sprite_width, float sprite_height) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    unsigned char *data = stbi_load(filename, &game->atlas->width, &game->atlas->height,
-                                    &game->atlas->channels, 0);
+    unsigned char *data =
+            stbi_load(filename, &game->atlas->width, &game->atlas->height,
+                      &game->atlas->channels, 0);
     if (!data) {
         logline(ERROR, "Failed to load atlas texture");
         exit(-1);
     }
     logline(INFO, "Successfully loaded atlas %s", filename);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, game->atlas->width, game->atlas->height,
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, game->atlas->width,
+                 game->atlas->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     stbi_image_free(data);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void atlas_destroy() {

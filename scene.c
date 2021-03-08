@@ -8,18 +8,25 @@
 #include <stdlib.h>
 #include <string.h>
 
-scene_t *scene_create(char *name) {
+scene_t *scene_create(char *name, scene_init_f init, scene_update_f update,
+                      scene_render_f render) {
     scene_t *scene = malloc(sizeof(scene_t));
-    checkm(scene, name);
+    checkm(scene);
 
     scene->name = malloc(strlen(name) * sizeof(char) + 1);
-    checkm(scene->name, name);
+    checkm(scene->name);
     strncpy(scene->name, name, strlen(name));
 
     scene->sprites = malloc(10 * sizeof(sprite_t *));
-    checkm(scene->sprites, "sprite array");
+    checkm(scene->sprites);
     scene->sprite_count = 0;
     scene->sprite_size = 0;
+
+    scene->init = init;
+    scene->update = update;
+    scene->render = render;
+
+    scene->init(scene);
 
     return scene;
 }

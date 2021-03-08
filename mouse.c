@@ -37,19 +37,12 @@ GLFWcursor *custom_cursor() {
     return cursor;
 }
 
-void cursor_position_callback(GLFWwindow *gl_window, double x_pos, double y_pos) {
-    if (x_pos < 0) {
-        x_pos = 0;
-    }
-    if (x_pos > game->window->width) {
-        x_pos = game->window->width;
-    }
-    if (y_pos < 0) {
-        y_pos = 0;
-    }
-    if (x_pos > game->window->height) {
-        x_pos = game->window->height;
-    }
+void cursor_position_callback(GLFWwindow *gl_window, double x_pos,
+                              double y_pos) {
+    if (x_pos < 0) { x_pos = 0; }
+    if (x_pos > game->window->width) { x_pos = game->window->width; }
+    if (y_pos < 0) { y_pos = 0; }
+    if (x_pos > game->window->height) { x_pos = game->window->height; }
     game->window->mouse_x = x_pos;
     game->window->mouse_y = y_pos;
 }
@@ -58,13 +51,9 @@ void scroll_callback(GLFWwindow *gl_window, double x_offset, double y_offset) {
     game->window->scroll_x_offset = x_offset;
     game->window->scroll_y_offset = y_offset;
     if (y_offset == -1.0f) {
-        //        if (game_state->window_state->zoom < 30.0f) {
-        //        game_state->window_state->zoom += 1.0f;
-        //        }
+        if (game->window->zoom < 30.0f) { game->window->zoom += 0.5f; }
     } else {
-        //        if (game_state->window_state->zoom > 1.0f) {
-        //        game_state->window_state->zoom -= 1.0f;
-        //        }
+        if (game->window->zoom > 1.0f) { game->window->zoom -= 0.5f; }
     }
     game->window->update_aspect = true;
 }

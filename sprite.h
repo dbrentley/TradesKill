@@ -5,29 +5,24 @@
 #ifndef TRADESKILL_SPRITE_H
 #define TRADESKILL_SPRITE_H
 
+#include "atlas.h"
+
 typedef struct sprite_t sprite_t;
 
-typedef void (*update_m)(sprite_t *);
-typedef void (*render_m)(sprite_t *);
 
 typedef enum {
-    WALK,
-    RUN,
-    IDLE,
-    ATTACK,
-    DODGE,
-    DEATH
-} animation_type_e;
+    ORE_COPPER,
+    ORE_SILVER,
+    ORE_GOLD,
+    ORE_STEEL,
+    ORE_TITANIUM,
+    TOTAL
+} sprite_type_e;
 
 typedef struct {
-    animation_type_e anim_type;
-    int frames;
-} animation_t;
-
-typedef struct {
-    float size_w;
-    float size_h;
-} sprite_texture_t;
+    float u;
+    float v;
+} sprite_uv_t;
 
 typedef struct {
     float z;
@@ -37,22 +32,14 @@ typedef struct {
     float zoom;
 } sprite_position_t;
 
-typedef struct {
-    float x;
-    float y;
-} atlas_offset_t;
-
 struct sprite_t {
-    char *name;
+    sprite_type_e type;
     atlas_offset_t atlas_offset;
     sprite_position_t position;
-    sprite_texture_t texture;
-    animation_t **animations;
-    render_m render;
-    update_m update;
+    sprite_uv_t texture;
 };
 
-sprite_t *sprite_create(char *name, atlas_offset_t atlas_offset);
+sprite_t *sprite_create(sprite_type_e type);
 
 void sprite_destroy(sprite_t *sprite);
 

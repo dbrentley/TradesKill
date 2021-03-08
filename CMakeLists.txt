@@ -17,7 +17,8 @@ pkg_search_module(GLFW REQUIRED glfw3)
 add_executable(TradesKill main.c globals.h keyboard.c keyboard.h window.c
         window.h timer.c timer.h state.c state.h mouse.c mouse.h linmath.h
         game.c game.h logger.h sprite.c sprite.h shader.c shader.h atlas.c
-        atlas.h renderer.c renderer.h scene.c scene.h utils.c utils.h)
+        atlas.h renderer.c renderer.h scene.c scene.h utils.c utils.h
+        animation.c animation.h scenes/scene_primary.c scenes/scene_primary.h sprites/ore_gold.c sprites/ore_gold.h assets.h assets.c)
 
 target_link_libraries(TradesKill GLEW::GLEW ${GLFW_STATIC_LIBRARIES}
         ${OPENGL_LIBRARIES} Freetype::Freetype pthread fftw3 stb m)

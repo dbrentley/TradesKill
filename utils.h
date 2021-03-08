@@ -7,6 +7,6 @@
 
 void ffree(void *obj);
 
-void checkm(void *obj, char *name);
+void checkm(void *obj);
 
 #endif//TRADESKILL_UTILS_H
