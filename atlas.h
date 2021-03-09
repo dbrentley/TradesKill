@@ -10,7 +10,7 @@
 typedef struct {
     float x;
     float y;
-} atlas_offset_t;
+} atlas_position_t;
 
 typedef struct {
     char *filename;

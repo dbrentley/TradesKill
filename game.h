@@ -5,6 +5,7 @@
 #ifndef TRADESKILL_GAME_H
 #define TRADESKILL_GAME_H
 
+#include "assets.h"
 #include "atlas.h"
 #include "state.h"
 #include "timer.h"
@@ -28,6 +29,7 @@ typedef struct {
     atlas_t *atlas;
     scene_t *current_scene;
     scene_t **scenes;
+    asset_t **assets;
     int scene_count;
     int scene_size;
 } game_t;

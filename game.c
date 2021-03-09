@@ -32,68 +32,49 @@ void game_init(char *name) {
     state_init();
     atlas_init("assets/atlas.png", 16.0f, 16.0f);
 
-    int total_assets = assets_init();
     game->gle = malloc(sizeof(game_gle_t));
     checkm(game->gle);
 
-    int vertex_attributes = 4;
-
-    game->gle->vertex_buffer = malloc(total_assets * sizeof(float) * 32);
+    game->gle->vertex_buffer = malloc(MAX_SPRITES * sizeof(float));
     checkm(game->gle->vertex_buffer);
-    game->gle->vertex_buffer_size = 32;
-    float psw = game->atlas->pixel_size_width * game->atlas->sprite_width;
-    float psh = game->atlas->pixel_size_height * game->atlas->sprite_height;
-    float vb[] = {
-            // position   uv
-            -1.5f, -0.5f, 0.0f,    psh, // ll 0
-            -0.5f, -0.5f, psw,     psh, // lr 1
-            -0.5f, 0.5f,  psw,     0.0f,// ur 2
-            -1.5f, 0.5f,  0.0f,    0.0f,// ul 3
+    game->gle->vertex_buffer_size = 0;
 
-            0.0f,  -0.5f, psw,     psh, // ll 4
-            1.0f,  -0.5f, psw * 2, psh, // lr 5
-            1.0f,  0.5f,  psw * 2, 0.0f,// ur 6
-            0.0f,  0.5f,  psw,     0.0f,// ul 7
-    };
-    memcpy(game->gle->vertex_buffer, vb, 32 * sizeof(float));
-
-    game->gle->element_buffer = malloc(total_assets * sizeof(uint32_t) * 12);
+    game->gle->element_buffer = malloc(MAX_SPRITES * sizeof(uint32_t));
     checkm(game->gle->element_buffer);
-    game->gle->element_buffer_size = 12;
-    //    uint32_t eb[] = {
-    //            1, 0, 2, 2, 0, 3,// 1
-    //            5, 4, 6, 6, 7, 4 //2
-    //    };
-    uint32_t eb[] = {
-            0, 1, 2, 2, 3, 0,// 1
-            4, 5, 6, 6, 7, 4 //2
-    };
-    memcpy(game->gle->element_buffer, eb, 12 * sizeof(uint32_t));
+    game->gle->element_buffer_size = 0;
+
+    assets_init();
 
     // vao
     glGenVertexArrays(1, &game->gle->vao);
     glBindVertexArray(game->gle->vao);
+
     // vbo
     glGenBuffers(1, &game->gle->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
-    glBufferData(GL_ARRAY_BUFFER, game->gle->vertex_buffer_size * sizeof(float),
-                 game->gle->vertex_buffer, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, MAX_SPRITES * sizeof(float), NULL,
+                 GL_DYNAMIC_DRAW);
     // ebo
+    int p = 0;
+    for (int e = 0; e < MAX_SPRITES - 6; e += 6) {
+        game->gle->element_buffer[e] = 0 + p;
+        game->gle->element_buffer[e + 1] = 1 + p;
+        game->gle->element_buffer[e + 2] = 2 + p;
+        game->gle->element_buffer[e + 3] = 2 + p;
+        game->gle->element_buffer[e + 4] = 3 + p;
+        game->gle->element_buffer[e + 5] = 0 + p;
+        p += 4;
+    }
     glGenBuffers(1, &game->gle->ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, game->gle->ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 game->gle->element_buffer_size * sizeof(uint32_t),
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_SPRITES * sizeof(uint32_t),
                  game->gle->element_buffer, GL_STATIC_DRAW);
     // position attribute pointer
-    int position_size = 2;
-    glVertexAttribPointer(0, position_size, GL_FLOAT, GL_FALSE,
-                          vertex_attributes * sizeof(float), 0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
     glEnableVertexAttribArray(0);
     // uv attribute pointer
-    int uv_size = 2;
-    glVertexAttribPointer(1, uv_size, GL_FLOAT, GL_FALSE,
-                          vertex_attributes * sizeof(float),
-                          (void *) (position_size * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+                          (void *) (2 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     scene_t *main_scene =
@@ -101,6 +82,8 @@ void game_init(char *name) {
                          scene_primary_update, scene_primary_render);
     game->current_scene = main_scene;
     game_scene_add(main_scene);
+
+    asset_create(0.0f, 0.0f, game->assets[ORE_GOLD]);
 }
 
 void game_render() {
@@ -110,11 +93,13 @@ void game_render() {
     }
     glBindTexture(GL_TEXTURE_2D, game->atlas->texture);
     glBindVertexArray(game->gle->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0,
+                    game->gle->vertex_buffer_size * sizeof(float),
+                    game->gle->vertex_buffer);
 
-    glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
-
-    glBindVertexArray(0);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glDrawElements(GL_TRIANGLES, game->gle->element_buffer_size,
+                   GL_UNSIGNED_INT, 0);
 }
 
 void game_scene_add(scene_t *scene) {

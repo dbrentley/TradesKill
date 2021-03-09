@@ -109,17 +109,19 @@ void window_init(char *title) {
     logline(INFO, "Renderer: %s", renderer);
     logline(INFO, "OpenGL version supported %s", version);
 
-    // enable depth testing
-    glEnable(GL_DEPTH_TEST);
+    // disable depth testing
+    glDisable(GL_DEPTH_TEST);
 
     // enable blending for alpha
+    //http://www.andersriggelsen.dk/glblendfunc.php
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
 
     // depth-testing interprets a smaller value as "closer"
     glDepthFunc(GL_LESS);
 
-    glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
+    glClearColor(0.169f, 0.169f, 0.169f, 0.1f);
 
     set_aspect(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }

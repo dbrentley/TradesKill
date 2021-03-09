@@ -22,21 +22,18 @@ typedef enum {
 typedef struct {
     float u;
     float v;
-} sprite_uv_t;
+} texture_uv_t;
 
 typedef struct {
-    float z;
-    float x;
-    float y;
-    float rotation;
-    float zoom;
-} sprite_position_t;
+    int width;
+    int height;
+} sprite_size_t;
 
 struct sprite_t {
     sprite_type_e type;
-    atlas_offset_t atlas_offset;
-    sprite_position_t position;
-    sprite_uv_t texture;
+    sprite_size_t size;
+    atlas_position_t atlas_offset;
+    texture_uv_t texture;
 };
 
 sprite_t *sprite_create(sprite_type_e type);
