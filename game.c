@@ -44,6 +44,7 @@ void game_init(char *name) {
     game->gle->element_buffer_size = 0;
 
     assets_init();
+    game->assets_count = 0;
 
     // vao
     glGenVertexArrays(1, &game->gle->vao);
@@ -84,12 +85,16 @@ void game_init(char *name) {
     game_scene_add(main_scene);
 
     asset_create(0.0f, 0.0f, game->assets[ORE_GOLD]);
+    asset_create(1.0f, 0.0f, game->assets[ORE_COPPER]);
 }
 
 void game_render() {
     for (int x = 0; x < game->scene_size; x++) {
         game->current_scene->update(game->current_scene);
         game->current_scene->render(game->current_scene);
+    }
+    for (int x = 0; x < game->assets_count; x++) {
+        game->assets[x]->update(game->assets[x]);
     }
     glBindTexture(GL_TEXTURE_2D, game->atlas->texture);
     glBindVertexArray(game->gle->vao);

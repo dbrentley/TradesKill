@@ -5,6 +5,7 @@
 #include "assets.h"
 #include "game.h"
 #include "logger.h"
+#include "sprites/ore_copper.h"
 #include "sprites/ore_gold.h"
 #include "utils.h"
 
@@ -22,6 +23,7 @@ int assets_init() {
     }
 
     ore_gold_init(game->assets[ORE_GOLD]);
+    ore_copper_init(game->assets[ORE_COPPER]);
 
     return sprite_type_total;
 }
@@ -69,6 +71,7 @@ void asset_create(float x, float y, asset_t *asset) {
 
     game->gle->vertex_buffer_size += 16;
     game->gle->element_buffer_size += 6;
+    game->assets_count++;
 }
 
 void assets_destroy() {

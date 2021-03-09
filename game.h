@@ -29,9 +29,10 @@ typedef struct {
     atlas_t *atlas;
     scene_t *current_scene;
     scene_t **scenes;
-    asset_t **assets;
     int scene_count;
     int scene_size;
+    asset_t **assets;
+    int assets_count;
 } game_t;
 
 extern game_t *game;

@@ -16,6 +16,4 @@ sprite_t *sprite_create(sprite_type_e type) {
     return sprite;
 }
 
-void sprite_destroy(sprite_t *sprite) {
-    ffree(sprite);
-}
+void sprite_destroy(sprite_t *sprite) { ffree(sprite); }

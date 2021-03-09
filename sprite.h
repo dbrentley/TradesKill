@@ -10,14 +10,7 @@
 typedef struct sprite_t sprite_t;
 
 
-typedef enum {
-    ORE_COPPER,
-    ORE_SILVER,
-    ORE_GOLD,
-    ORE_STEEL,
-    ORE_TITANIUM,
-    TOTAL
-} sprite_type_e;
+typedef enum { ORE_COPPER, ORE_GOLD, TOTAL } sprite_type_e;
 
 typedef struct {
     float u;
