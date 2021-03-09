@@ -17,6 +17,8 @@ typedef struct {
     int width;
     int height;
     int channels;
+    float pixel_size_width;
+    float pixel_size_height;
     float sprite_width;
     float sprite_height;
     GLuint texture;

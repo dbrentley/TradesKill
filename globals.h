@@ -10,6 +10,7 @@
 
 #define DEFAULT_WIDTH 1280
 #define DEFAULT_HEIGHT 720
+#define OFFSETOF(TYPE, ELEMENT) ((size_t) & (((TYPE *) 0)->ELEMENT))
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

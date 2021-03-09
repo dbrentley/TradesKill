@@ -111,10 +111,15 @@ void window_init(char *title) {
 
     // enable depth testing
     glEnable(GL_DEPTH_TEST);
+
+    // enable blending for alpha
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
     // depth-testing interprets a smaller value as "closer"
     glDepthFunc(GL_LESS);
 
-    //glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
+    glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
 
     set_aspect(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }

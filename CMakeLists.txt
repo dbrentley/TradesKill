@@ -19,10 +19,14 @@ add_executable(TradesKill main.c globals.h keyboard.c keyboard.h window.c
         game.c game.h logger.h sprite.c sprite.h shader.c shader.h atlas.c
         atlas.h renderer.c renderer.h scene.c scene.h utils.c utils.h
         animation.c animation.h scenes/scene_primary.c scenes/scene_primary.h
-        sprites/ore_gold.c sprites/ore_gold.h assets.h assets.c)
+        sprites/ore_gold.c sprites/ore_gold.h assets.h assets.c vertex.c vertex.h)
 
 target_link_libraries(TradesKill GLEW::GLEW ${GLFW_STATIC_LIBRARIES}
         ${OPENGL_LIBRARIES} Freetype::Freetype pthread stb m)
+
+add_custom_command(TARGET TradesKill PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E remove_directory
+        ${CMAKE_BINARY_DIR}/assets)
 
 add_custom_command(TARGET TradesKill POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory

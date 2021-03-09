@@ -30,7 +30,7 @@ void game_init(char *name) {
 
     timer_init();
     state_init();
-    atlas_init("assets/red-potion.png", 16.0f, 16.0f);
+    atlas_init("assets/atlas.png", 16.0f, 16.0f);
 
     int total_assets = assets_init();
     game->gle = malloc(sizeof(game_gle_t));
@@ -41,26 +41,32 @@ void game_init(char *name) {
     game->gle->vertex_buffer = malloc(total_assets * sizeof(float) * 32);
     checkm(game->gle->vertex_buffer);
     game->gle->vertex_buffer_size = 32;
+    float psw = game->atlas->pixel_size_width * game->atlas->sprite_width;
+    float psh = game->atlas->pixel_size_height * game->atlas->sprite_height;
     float vb[] = {
             // position   uv
-            -1.5f, -0.5f, 0.0f, 1.0f,// ll 0
-            -0.5f, -0.5f, 1.0f, 1.0f,// lr 1
-            -0.5f, 0.5f,  1.0f, 0.0f,// ur 2
-            -1.5f, 0.5f,  0.0f, 0.0f,// ul 3
+            -1.5f, -0.5f, 0.0f,    psh, // ll 0
+            -0.5f, -0.5f, psw,     psh, // lr 1
+            -0.5f, 0.5f,  psw,     0.0f,// ur 2
+            -1.5f, 0.5f,  0.0f,    0.0f,// ul 3
 
-            5.0f,  -0.5f, 0.0f, 1.0f,// ll 4
-            6.0f,  -0.5f, 1.0f, 1.0f,// lr 5
-            6.0f,  0.5f,  1.0f, 0.0f,// ur 6
-            5.0f,  0.5f,  0.0f, 0.0f,// ul 7
+            0.0f,  -0.5f, psw,     psh, // ll 4
+            1.0f,  -0.5f, psw * 2, psh, // lr 5
+            1.0f,  0.5f,  psw * 2, 0.0f,// ur 6
+            0.0f,  0.5f,  psw,     0.0f,// ul 7
     };
     memcpy(game->gle->vertex_buffer, vb, 32 * sizeof(float));
 
     game->gle->element_buffer = malloc(total_assets * sizeof(uint32_t) * 12);
     checkm(game->gle->element_buffer);
     game->gle->element_buffer_size = 12;
+    //    uint32_t eb[] = {
+    //            1, 0, 2, 2, 0, 3,// 1
+    //            5, 4, 6, 6, 7, 4 //2
+    //    };
     uint32_t eb[] = {
-            1, 0, 2, 2, 0, 3,// 1
-            5, 4, 6, 6, 7, 4 //2
+            0, 1, 2, 2, 3, 0,// 1
+            4, 5, 6, 6, 7, 4 //2
     };
     memcpy(game->gle->element_buffer, eb, 12 * sizeof(uint32_t));
 

@@ -29,7 +29,7 @@ void atlas_init(char *filename, float sprite_width, float sprite_height) {
 
     unsigned char *data =
             stbi_load(filename, &game->atlas->width, &game->atlas->height,
-                      &game->atlas->channels, 0);
+                      &game->atlas->channels, STBI_rgb_alpha);
     if (!data) {
         logline(ERROR, "Failed to load atlas texture");
         exit(-1);
@@ -39,6 +39,9 @@ void atlas_init(char *filename, float sprite_width, float sprite_height) {
                  game->atlas->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     stbi_image_free(data);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    game->atlas->pixel_size_width = 1.0f / (float) game->atlas->width;
+    game->atlas->pixel_size_height = 1.0f / (float) game->atlas->height;
 }
 
 void atlas_destroy() {
