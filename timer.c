@@ -6,16 +6,12 @@
 #include "game.h"
 #include "globals.h"
 #include "logger.h"
-#include "stdio.h"
 #include "stdlib.h"
 #include "utils.h"
 
 void timer_init() {
     game->timer = malloc(sizeof(game_timer_t));
-    if (game->timer == NULL) {
-        logline(ERROR, "Could not allocate memory for window");
-        exit(-1);
-    }
+    checkm(game->timer);
 
     game->timer->frame_count = 0;
     game->timer->fps = 0;
@@ -46,6 +42,4 @@ void timer_end() {
     }
 }
 
-void timer_destroy() {
-    ffree(game->timer);
-}
+void timer_destroy() { ffree(game->timer); }

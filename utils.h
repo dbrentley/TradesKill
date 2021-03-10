@@ -9,4 +9,6 @@ void ffree(void *obj);
 
 void checkm(void *obj);
 
+float float_rand(float min, float max);
+
 #endif//TRADESKILL_UTILS_H

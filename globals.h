@@ -5,12 +5,13 @@
 #ifndef TRADESKILL_GLOBALS_H
 #define TRADESKILL_GLOBALS_H
 
-#define DEBUG_OFF
+#define DEBUG_ON
 #define GLEW_STATIC
 
-#define DEFAULT_WIDTH 1280
-#define DEFAULT_HEIGHT 720
-#define MAX_SPRITES 100000
+#define DEFAULT_WIDTH 1920
+#define DEFAULT_HEIGHT 1080
+#define MAX_SPRITES 75000
+
 #define OFFSETOF(TYPE, ELEMENT) ((size_t) & (((TYPE *) 0)->ELEMENT))
 
 #include <GL/glew.h>

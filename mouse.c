@@ -39,12 +39,8 @@ GLFWcursor *custom_cursor() {
 
 void cursor_position_callback(GLFWwindow *gl_window, double x_pos,
                               double y_pos) {
-    if (x_pos < 0) { x_pos = 0; }
-    if (x_pos > game->window->width) { x_pos = game->window->width; }
-    if (y_pos < 0) { y_pos = 0; }
-    if (x_pos > game->window->height) { x_pos = game->window->height; }
-    game->window->mouse_x = x_pos;
-    game->window->mouse_y = y_pos;
+    game->window->mouse_x = x_pos / game->window->width - 0.5;
+    game->window->mouse_y = y_pos / game->window->height - 0.5;
 }
 
 void scroll_callback(GLFWwindow *gl_window, double x_offset, double y_offset) {
@@ -56,4 +52,19 @@ void scroll_callback(GLFWwindow *gl_window, double x_offset, double y_offset) {
         if (game->window->zoom > 1.0f) { game->window->zoom -= 0.5f; }
     }
     game->window->update_aspect = true;
+}
+
+void mouse_button_callback(GLFWwindow *gl_window, int button, int action,
+                           int mods) {
+    logline(INFO, "Mouse %f x %f", game->window->mouse_x,
+            game->window->mouse_y);
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+        asset_t *asset = asset_get_by_index(0);
+        asset_destroy(asset);
+    }
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+
+        //        asset_create((float) game->window->mouse_x,
+        //                     (float) game->window->mouse_y, game->assets[ORE_GOLD]);
+    }
 }

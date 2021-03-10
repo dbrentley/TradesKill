@@ -71,6 +71,8 @@ void window_init(char *title) {
     game->window->should_close = false;
     game->window->should_resize = false;
     game->window->update_aspect = false;
+    game->window->mouse_x = 0.0;
+    game->window->mouse_y = 0.0;
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -93,6 +95,7 @@ void window_init(char *title) {
     // mouse
     glfwSetCursorPosCallback(game->window->gl_window, cursor_position_callback);
     glfwSetScrollCallback(game->window->gl_window, scroll_callback);
+    glfwSetMouseButtonCallback(game->window->gl_window, mouse_button_callback);
 
     // window
     glfwSetErrorCallback(error_callback);

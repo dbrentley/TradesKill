@@ -26,6 +26,7 @@ struct asset_t {
     sprite_t *sprite;
     bool visible;
     float z;
+    int index;
     asset_position_t position;
     asset_init_f init;
     asset_update_f update;
@@ -38,10 +39,14 @@ typedef struct {
     texture_uv_t uv;
 } vertex_t;
 
-int assets_init();
+void assets_init();
 
 void assets_destroy();
 
-void asset_create(float x, float y, asset_t *asset);
+asset_t *asset_create(float x, float y, sprite_type_e type);
+
+void asset_destroy(asset_t *asset);
+
+asset_t *asset_get_by_index(int id);
 
 #endif//TRADESKILL_ASSETS_H

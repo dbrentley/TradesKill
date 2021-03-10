@@ -3,11 +3,13 @@
 #include "logger.h"
 #include "shader.h"
 #include "timer.h"
+#include "utils.h"
 
 game_t *game;
 
 int main() {
     game_init("TradesKill");
+
     GLuint default_program =
             shader_program_create("assets/shaders/default.v.shader",
                                   "assets/shaders/default.f.shader");
@@ -17,7 +19,13 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-    while (!game->window->should_close) {
+
+    for (int a = 0; a < MAX_SPRITES; a++) {
+        asset_create(float_rand(-20.0f, 20.0f), float_rand(-20.0f, 20.0f),
+                     ORE_COPPER);
+    }
+
+    while (!game->window->should_close && game->running) {
         timer_start();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(default_program);

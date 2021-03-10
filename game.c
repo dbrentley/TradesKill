@@ -21,13 +21,16 @@ void game_init(char *name) {
         exit(-1);
     }
 
+    game->running = false;
     game->scenes = malloc(sizeof(scene_t *));
     checkm(game->scenes);
     game->scene_count = 0;
     game->scene_size = 0;
 
-    window_init(name);
+    game->asset_slot = calloc(MAX_SPRITES * sizeof(char), MAX_SPRITES);
+    checkm(game->asset_slot);
 
+    window_init(name);
     timer_init();
     state_init();
     atlas_init("assets/atlas.png", 16.0f, 16.0f);
@@ -35,11 +38,11 @@ void game_init(char *name) {
     game->gle = malloc(sizeof(game_gle_t));
     checkm(game->gle);
 
-    game->gle->vertex_buffer = malloc(MAX_SPRITES * sizeof(float));
+    game->gle->vertex_buffer = malloc(MAX_SPRITES * sizeof(float) * 16);
     checkm(game->gle->vertex_buffer);
     game->gle->vertex_buffer_size = 0;
 
-    game->gle->element_buffer = malloc(MAX_SPRITES * sizeof(uint32_t));
+    game->gle->element_buffer = malloc(MAX_SPRITES * sizeof(uint32_t) * 6);
     checkm(game->gle->element_buffer);
     game->gle->element_buffer_size = 0;
 
@@ -53,7 +56,7 @@ void game_init(char *name) {
     // vbo
     glGenBuffers(1, &game->gle->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
-    glBufferData(GL_ARRAY_BUFFER, MAX_SPRITES * sizeof(float), NULL,
+    glBufferData(GL_ARRAY_BUFFER, MAX_SPRITES * sizeof(float) * 16, NULL,
                  GL_DYNAMIC_DRAW);
     // ebo
     int p = 0;
@@ -84,21 +87,28 @@ void game_init(char *name) {
     game->current_scene = main_scene;
     game_scene_add(main_scene);
 
-    asset_create(0.0f, 0.0f, game->assets[ORE_GOLD]);
-    asset_create(1.0f, 0.0f, game->assets[ORE_COPPER]);
+    game->running = true;
 }
 
 void game_render() {
-    for (int x = 0; x < game->scene_size; x++) {
-        game->current_scene->update(game->current_scene);
-        game->current_scene->render(game->current_scene);
-    }
-    for (int x = 0; x < game->assets_count; x++) {
-        game->assets[x]->update(game->assets[x]);
-    }
+    // no scene for now
+    //for (int x = 0; x < game->scene_size; x++) {
+    //    game->current_scene->update(game->current_scene);
+    //    game->current_scene->render(game->current_scene);
+    //}
     glBindTexture(GL_TEXTURE_2D, game->atlas->texture);
     glBindVertexArray(game->gle->vao);
     glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
+
+    for (int x = 0; x < game->assets_count; x++) {
+        if (game->asset_slot[x] == 1) {
+            if (game->assets[x]->index != -1) {
+                game->assets[x]->update(game->assets[x]);
+                game->assets[x]->render(game->assets[x]);
+            }
+        }
+    }
+
     glBufferSubData(GL_ARRAY_BUFFER, 0,
                     game->gle->vertex_buffer_size * sizeof(float),
                     game->gle->vertex_buffer);
@@ -137,8 +147,6 @@ void game_destroy() {
         scene_destroy(game->scenes[x]);
     }
     ffree(game->scenes);
-    ffree(game->gle->vertex_buffer);
-    ffree(game->gle->element_buffer);
     ffree(game->gle);
     ffree(game);
 }
