@@ -28,15 +28,10 @@ void assets_destroy() {
 }
 
 asset_t *asset_create(float x, float y, sprite_type_e type) {
-    int i, offset = 0;
-    int reuse = 0;
-    // figure out which slot to put the asset into (memory)
+    pthread_mutex_lock(&lock);
+    int i;
     for (i = 0; i < game->assets_count; i++) {
-        if (game->asset_slot[i] == 0) {
-            // this asset is taking a previously allocated slot
-            if (i < game->assets_count) { reuse = 1; }
-            break;
-        }
+        if (game->assets[i]->index == -1) { break; }
         // TODO: do something when max sprite limit reached
     }
 
@@ -53,7 +48,6 @@ asset_t *asset_create(float x, float y, sprite_type_e type) {
 
 
     game->assets[i]->index = i;
-    game->asset_slot[i] = 1;
 
     float psw = game->atlas->pixel_size_width * game->atlas->sprite_width;
     float psh = game->atlas->pixel_size_height * game->atlas->sprite_height;
@@ -85,16 +79,7 @@ asset_t *asset_create(float x, float y, sprite_type_e type) {
     v[3].uv.u = game->assets[i]->sprite->atlas_offset.x * psw;
     v[3].uv.v = game->assets[i]->sprite->atlas_offset.y * psh;
 
-    offset = game->gle->vertex_buffer_size;
-
-    if (reuse == 1) {
-        offset = i * 16;
-    } else {
-        game->gle->vertex_buffer_size += 16;
-        game->gle->element_buffer_size += 6;
-    }
-    //    logline(INFO, "Creating asset at offset %d with index %d", offset,
-    //            game->assets[i]->index);
+    int offset = i * 16;
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
     free(v);
 
@@ -102,16 +87,21 @@ asset_t *asset_create(float x, float y, sprite_type_e type) {
     game->assets[i]->position.y = y;
     game->assets[i]->visible = true;
 
-    game->assets_count++;
+    //game->assets_count++;
+    pthread_mutex_unlock(&lock);
     return game->assets[i];
 }
 
 void asset_add(float x, float y, sprite_type_e type) {
-    asset_queue_item_t *item = malloc(sizeof(asset_queue_item_t));
+    asset_add_queue_entry_t *item = malloc(sizeof(asset_add_queue_entry_t));
     item->type = type;
     item->x = x;
     item->y = y;
     queue_append(&game->queues.asset_add, item);
+}
+
+void asset_remove(asset_t *asset) {
+    queue_append(&game->queues.asset_remove, asset);
 }
 
 asset_t *asset_get_by_index(int id) {
@@ -124,27 +114,29 @@ asset_t *asset_get_by_index(int id) {
 void *asset_process_queue() {
     while (!game->window->should_close && game->running) {
         for (int x = 0; x < queue_size(&game->queues.asset_add); x++) {
-            asset_queue_item_t *item = queue_pop(&game->queues.asset_add);
+            asset_add_queue_entry_t *item = queue_pop(&game->queues.asset_add);
             if (item != NULL) {
                 asset_create(item->x, item->y, item->type);
                 free(item);
             }
+        }
+        for (int x = 0; x < queue_size(&game->queues.asset_remove); x++) {
+            asset_t *item = queue_pop(&game->queues.asset_remove);
+            if (item != NULL) { asset_destroy(item); }
         }
     }
     return NULL;
 }
 
 void asset_destroy(asset_t *asset) {
-    if (asset == NULL) { return; }
-    // TODO: put this in a queue
-    float *v = calloc(4 * sizeof(vertex_t), 4);
-    checkm(v);
+    if (asset == NULL || asset->index == -1) { return; }
+    pthread_mutex_lock(&lock);
+    float v[] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
     int offset = asset->index * 16;
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
-    free(v);
 
-    game->asset_slot[asset->index] = 0;
-    game->assets_count--;
-    ffree(asset);
+    game->assets[asset->index]->index = -1;
+    pthread_mutex_unlock(&lock);
 }

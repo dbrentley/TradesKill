@@ -14,9 +14,7 @@
 
 typedef struct {
     float *vertex_buffer;
-    int vertex_buffer_size;
     uint32_t *element_buffer;
-    int element_buffer_size;
     GLuint vao;
     GLuint vbo;
     GLuint ebo;
@@ -30,12 +28,13 @@ typedef struct {
     atlas_t *atlas;
     int assets_count;
     asset_t **assets;
-    char *asset_slot;
     bool running;
     queues_t queues;
 } game_t;
 
 extern game_t *game;
+extern pthread_mutex_t lock;
+extern bool key_down;
 
 void game_init(char *name);
 

@@ -7,10 +7,12 @@
 #include "logger.h"
 #include "utils.h"
 
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 game_t *game;
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 void game_init(char *name) {
     game = malloc(sizeof(game_t));
@@ -20,8 +22,6 @@ void game_init(char *name) {
     }
 
     game->running = false;
-    game->asset_slot = calloc(MAX_SPRITES * sizeof(char), MAX_SPRITES);
-    checkm(game->asset_slot);
 
     queue_init(&game->queues.alloc);
     queue_init(&game->queues.asset_add);
@@ -37,14 +37,12 @@ void game_init(char *name) {
 
     game->gle->vertex_buffer = malloc(MAX_SPRITES * sizeof(float) * 16);
     checkm(game->gle->vertex_buffer);
-    game->gle->vertex_buffer_size = 0;
 
     game->gle->element_buffer = malloc(MAX_SPRITES * sizeof(uint32_t) * 6);
     checkm(game->gle->element_buffer);
-    game->gle->element_buffer_size = 0;
 
     assets_init();
-    game->assets_count = 0;
+    game->assets_count = MAX_SPRITES;
 
     // vao
     glGenVertexArrays(1, &game->gle->vao);
@@ -87,20 +85,16 @@ void game_render() {
     glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
 
     for (int x = 0; x < game->assets_count; x++) {
-        if (game->asset_slot[x] == 1) {
-            if (game->assets[x]->index != -1) {
-                game->assets[x]->update(game->assets[x]);
-                game->assets[x]->render(game->assets[x]);
-            }
+        if (game->assets[x]->index != -1) {
+            game->assets[x]->update(game->assets[x]);
+            game->assets[x]->render(game->assets[x]);
         }
     }
 
-    glBufferSubData(GL_ARRAY_BUFFER, 0,
-                    game->gle->vertex_buffer_size * sizeof(float),
+    glBufferSubData(GL_ARRAY_BUFFER, 0, MAX_SPRITES * sizeof(float) * 16,
                     game->gle->vertex_buffer);
 
-    glDrawElements(GL_TRIANGLES, game->gle->element_buffer_size,
-                   GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, MAX_SPRITES, GL_UNSIGNED_INT, 0);
 }
 
 

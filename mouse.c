@@ -6,8 +6,8 @@
 #include "game.h"
 #include "globals.h"
 #include "logger.h"
+#include "utils.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -56,15 +56,6 @@ void scroll_callback(GLFWwindow *gl_window, double x_offset, double y_offset) {
 
 void mouse_button_callback(GLFWwindow *gl_window, int button, int action,
                            int mods) {
-    logline(INFO, "Mouse %f x %f", game->window->mouse_x,
-            game->window->mouse_y);
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-        asset_t *asset = asset_get_by_index(0);
-        asset_destroy(asset);
-    }
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-
-        //        asset_create((float) game->window->mouse_x,
-        //                     (float) game->window->mouse_y, game->assets[ORE_GOLD]);
-    }
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {}
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {}
 }

@@ -23,11 +23,6 @@ int main() {
             shader_program_get_uniform_location(default_program, "mvp");
 
 
-    for (int a = 0; a < 75000; a++) {
-        asset_add(float_rand(-15.0f, 15.0f), float_rand(-15.0f, 15.0f),
-                  ORE_COPPER);
-    }
-
     while (!game->window->should_close && game->running) {
         timer_start();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

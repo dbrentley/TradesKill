@@ -22,7 +22,7 @@ typedef struct {
     float y;
     sprite_type_e type;
     asset_t *asset;
-} asset_queue_item_t;
+} asset_add_queue_entry_t;
 
 typedef struct {
     float x;
@@ -53,6 +53,8 @@ void assets_destroy();
 asset_t *asset_create(float x, float y, sprite_type_e type);
 
 void asset_add(float x, float y, sprite_type_e type);
+
+void asset_remove(asset_t *asset);
 
 void asset_destroy(asset_t *asset);
 
