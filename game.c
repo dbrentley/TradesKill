@@ -5,8 +5,6 @@
 #include "game.h"
 #include "assets.h"
 #include "logger.h"
-#include "scene.h"
-#include "scenes/scene_primary.h"
 #include "utils.h"
 
 #include <stdio.h>
@@ -22,13 +20,12 @@ void game_init(char *name) {
     }
 
     game->running = false;
-    game->scenes = malloc(sizeof(scene_t *));
-    checkm(game->scenes);
-    game->scene_count = 0;
-    game->scene_size = 0;
-
     game->asset_slot = calloc(MAX_SPRITES * sizeof(char), MAX_SPRITES);
     checkm(game->asset_slot);
+
+    queue_init(&game->queues.alloc);
+    queue_init(&game->queues.asset_add);
+    queue_init(&game->queues.asset_remove);
 
     window_init(name);
     timer_init();
@@ -81,21 +78,10 @@ void game_init(char *name) {
                           (void *) (2 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    scene_t *main_scene =
-            scene_create("scene_primary", scene_primary_init,
-                         scene_primary_update, scene_primary_render);
-    game->current_scene = main_scene;
-    game_scene_add(main_scene);
-
     game->running = true;
 }
 
 void game_render() {
-    // no scene for now
-    //for (int x = 0; x < game->scene_size; x++) {
-    //    game->current_scene->update(game->current_scene);
-    //    game->current_scene->render(game->current_scene);
-    //}
     glBindTexture(GL_TEXTURE_2D, game->atlas->texture);
     glBindVertexArray(game->gle->vao);
     glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
@@ -117,24 +103,6 @@ void game_render() {
                    GL_UNSIGNED_INT, 0);
 }
 
-void game_scene_add(scene_t *scene) {
-    if (game->scene_count == game->scene_size) {
-        game->scenes = realloc(game->scenes,
-                               game->scene_count + 1 * sizeof(scene_t *));
-        checkm(game->scenes);
-        game->scene_size++;
-        game->scenes[game->scene_size] = NULL;
-    }
-    for (int x = 0; x < game->scene_size; x++) {
-        if (game->scenes[x] == NULL) {
-            game->scenes[x] = malloc(sizeof(scene_t));
-            memcpy(game->scenes[x], scene, sizeof(*scene));
-            break;
-        }
-    }
-}
-
-void game_scene_remove(scene_t *scene) {}
 
 void game_destroy() {
     state_destroy();
@@ -143,10 +111,10 @@ void game_destroy() {
     assets_destroy();
     atlas_destroy();
 
-    for (int x = 0; x < game->scene_size; x++) {
-        scene_destroy(game->scenes[x]);
-    }
-    ffree(game->scenes);
+    //    queue_destroy(&game->queues.alloc);
+    //    queue_destroy(&game->queues.asset_add);
+    //    queue_destroy(&game->queues.asset_remove);
+
     ffree(game->gle);
     ffree(game);
 }

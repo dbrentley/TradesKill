@@ -10,6 +10,9 @@ game_t *game;
 int main() {
     game_init("TradesKill");
 
+    pthread_t queue_processing_thread;
+    pthread_create(&queue_processing_thread, NULL, asset_process_queue, NULL);
+
     GLuint default_program =
             shader_program_create("assets/shaders/default.v.shader",
                                   "assets/shaders/default.f.shader");
@@ -20,9 +23,9 @@ int main() {
             shader_program_get_uniform_location(default_program, "mvp");
 
 
-    for (int a = 0; a < MAX_SPRITES; a++) {
-        asset_create(float_rand(-20.0f, 20.0f), float_rand(-20.0f, 20.0f),
-                     ORE_COPPER);
+    for (int a = 0; a < 75000; a++) {
+        asset_add(float_rand(-15.0f, 15.0f), float_rand(-15.0f, 15.0f),
+                  ORE_COPPER);
     }
 
     while (!game->window->should_close && game->running) {
@@ -47,6 +50,7 @@ int main() {
         timer_end();
     }
 
+    pthread_join(queue_processing_thread, NULL);
     game_destroy();
     logline(INFO, "Exiting");
 

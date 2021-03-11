@@ -7,6 +7,7 @@
 
 #include "assets.h"
 #include "atlas.h"
+#include "queue.h"
 #include "state.h"
 #include "timer.h"
 #include "window.h"
@@ -27,14 +28,11 @@ typedef struct {
     game_timer_t *timer;
     game_gle_t *gle;
     atlas_t *atlas;
-    scene_t *current_scene;
-    scene_t **scenes;
-    int scene_count;
-    int scene_size;
     int assets_count;
     asset_t **assets;
     char *asset_slot;
     bool running;
+    queues_t queues;
 } game_t;
 
 extern game_t *game;
@@ -42,10 +40,6 @@ extern game_t *game;
 void game_init(char *name);
 
 void game_render();
-
-void game_scene_add(scene_t *scene);
-
-void game_scene_remove(scene_t *scene);
 
 void game_destroy();
 

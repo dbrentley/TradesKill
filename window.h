@@ -6,7 +6,6 @@
 #define TRADESKILL_WINDOW_H
 
 #include "globals.h"
-#include "scene.h"
 
 #include <stdbool.h>
 
@@ -30,7 +29,6 @@ typedef struct {
     resize_event_t resize_event;
     mat4x4 mvp;
     GLFWwindow *gl_window;
-    scene_t **scenes;
 } window_t;
 
 void window_init(char *title);

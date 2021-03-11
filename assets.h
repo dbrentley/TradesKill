@@ -20,6 +20,13 @@ typedef void (*asset_render_f)(asset_t *);
 typedef struct {
     float x;
     float y;
+    sprite_type_e type;
+    asset_t *asset;
+} asset_queue_item_t;
+
+typedef struct {
+    float x;
+    float y;
 } asset_position_t;
 
 struct asset_t {
@@ -45,8 +52,12 @@ void assets_destroy();
 
 asset_t *asset_create(float x, float y, sprite_type_e type);
 
+void asset_add(float x, float y, sprite_type_e type);
+
 void asset_destroy(asset_t *asset);
 
 asset_t *asset_get_by_index(int id);
+
+void *asset_process_queue();
 
 #endif//TRADESKILL_ASSETS_H

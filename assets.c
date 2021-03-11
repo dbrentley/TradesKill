@@ -106,9 +106,30 @@ asset_t *asset_create(float x, float y, sprite_type_e type) {
     return game->assets[i];
 }
 
+void asset_add(float x, float y, sprite_type_e type) {
+    asset_queue_item_t *item = malloc(sizeof(asset_queue_item_t));
+    item->type = type;
+    item->x = x;
+    item->y = y;
+    queue_append(&game->queues.asset_add, item);
+}
+
 asset_t *asset_get_by_index(int id) {
     for (int x = 0; x < game->assets_count; x++) {
         if (game->assets[x]->index == id) { return game->assets[x]; }
+    }
+    return NULL;
+}
+
+void *asset_process_queue() {
+    while (!game->window->should_close && game->running) {
+        for (int x = 0; x < queue_size(&game->queues.asset_add); x++) {
+            asset_queue_item_t *item = queue_pop(&game->queues.asset_add);
+            if (item != NULL) {
+                asset_create(item->x, item->y, item->type);
+                free(item);
+            }
+        }
     }
     return NULL;
 }

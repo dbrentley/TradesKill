@@ -10,6 +10,5 @@
 void ore_gold_init(asset_t *asset);
 void ore_gold_update(asset_t *asset);
 void ore_gold_render(asset_t *asset);
-void ore_gold_destroy(asset_t *asset);
 
 #endif//TRADESKILL_ORE_GOLD_H
