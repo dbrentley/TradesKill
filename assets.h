@@ -60,6 +60,7 @@ void asset_destroy(asset_t *asset);
 
 asset_t *asset_get_by_index(int id);
 
-void *asset_process_queue();
+void *asset_process_add_queue();
+void *asset_process_rem_queue();
 
 #endif//TRADESKILL_ASSETS_H

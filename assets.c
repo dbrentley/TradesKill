@@ -28,7 +28,7 @@ void assets_destroy() {
 }
 
 asset_t *asset_create(float x, float y, sprite_type_e type) {
-    pthread_mutex_lock(&lock);
+    //pthread_mutex_lock(&lock);
     int i;
     for (i = 0; i < game->assets_count; i++) {
         if (game->assets[i]->index == -1) { break; }
@@ -46,15 +46,12 @@ asset_t *asset_create(float x, float y, sprite_type_e type) {
             break;
     }
 
-
     game->assets[i]->index = i;
 
     float psw = game->atlas->pixel_size_width * game->atlas->sprite_width;
     float psh = game->atlas->pixel_size_height * game->atlas->sprite_height;
 
-    vertex_t *v = malloc(4 * sizeof(vertex_t));
-    checkm(v);
-
+    vertex_t v[4];
     float x_off = x - 0.5f;
     float y_off = y - 0.5f;
 
@@ -81,14 +78,13 @@ asset_t *asset_create(float x, float y, sprite_type_e type) {
 
     int offset = i * 16;
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
-    free(v);
+    //    free(v);
 
     game->assets[i]->position.x = x;
     game->assets[i]->position.y = y;
     game->assets[i]->visible = true;
 
-    //game->assets_count++;
-    pthread_mutex_unlock(&lock);
+    //pthread_mutex_unlock(&lock);
     return game->assets[i];
 }
 
@@ -111,7 +107,7 @@ asset_t *asset_get_by_index(int id) {
     return NULL;
 }
 
-void *asset_process_queue() {
+void *asset_process_add_queue() {
     while (!game->window->should_close && game->running) {
         for (int x = 0; x < queue_size(&game->queues.asset_add); x++) {
             asset_add_queue_entry_t *item = queue_pop(&game->queues.asset_add);
@@ -120,6 +116,12 @@ void *asset_process_queue() {
                 free(item);
             }
         }
+    }
+    return NULL;
+}
+
+void *asset_process_rem_queue() {
+    while (!game->window->should_close && game->running) {
         for (int x = 0; x < queue_size(&game->queues.asset_remove); x++) {
             asset_t *item = queue_pop(&game->queues.asset_remove);
             if (item != NULL) { asset_destroy(item); }
@@ -130,7 +132,7 @@ void *asset_process_queue() {
 
 void asset_destroy(asset_t *asset) {
     if (asset == NULL || asset->index == -1) { return; }
-    pthread_mutex_lock(&lock);
+    //pthread_mutex_lock(&lock);
     float v[] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
@@ -138,5 +140,5 @@ void asset_destroy(asset_t *asset) {
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
 
     game->assets[asset->index]->index = -1;
-    pthread_mutex_unlock(&lock);
+    //pthread_mutex_unlock(&lock);
 }

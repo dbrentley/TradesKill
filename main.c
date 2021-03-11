@@ -3,15 +3,19 @@
 #include "logger.h"
 #include "shader.h"
 #include "timer.h"
-#include "utils.h"
 
 game_t *game;
 
 int main() {
     game_init("TradesKill");
 
-    pthread_t queue_processing_thread;
-    pthread_create(&queue_processing_thread, NULL, asset_process_queue, NULL);
+    pthread_t queue_processing_add_thread;
+    pthread_create(&queue_processing_add_thread, NULL, asset_process_add_queue,
+                   NULL);
+
+    pthread_t queue_processing_rem_thread;
+    pthread_create(&queue_processing_rem_thread, NULL, asset_process_rem_queue,
+                   NULL);
 
     GLuint default_program =
             shader_program_create("assets/shaders/default.v.shader",
@@ -45,7 +49,8 @@ int main() {
         timer_end();
     }
 
-    pthread_join(queue_processing_thread, NULL);
+    pthread_join(queue_processing_add_thread, NULL);
+    pthread_join(queue_processing_rem_thread, NULL);
     game_destroy();
     logline(INFO, "Exiting");
 
