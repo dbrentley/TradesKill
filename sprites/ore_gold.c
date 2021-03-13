@@ -4,6 +4,7 @@
 
 #include "ore_gold.h"
 #include "../game.h"
+#include "../logger.h"
 
 void ore_gold_init(asset_t *asset) {
     asset->sprite = sprite_create(ORE_GOLD);
@@ -13,13 +14,16 @@ void ore_gold_init(asset_t *asset) {
     asset->sprite->size.height = (int) game->atlas->sprite_height;
     asset->index = -1;
 
-    asset->init = ore_gold_init;
     asset->update = ore_gold_update;
-    asset->render = ore_gold_render;
 
-    asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 1, 0);
+    asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 1, 0.9f);
 }
 
-void ore_gold_update(asset_t *asset) {}
+void ore_gold_update(asset_t *asset) {
+    asset_animate(asset);
 
-void ore_gold_render(asset_t *asset) {}
+    if (game->timer->time - game->timer->previous_time > 1.0) {
+        double r = mtwist_drand(game->mt);
+        if (r > 0.01) { return; }
+    }
+}

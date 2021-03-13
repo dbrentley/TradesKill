@@ -9,6 +9,5 @@
 
 void ore_copper_init(asset_t *asset);
 void ore_copper_update(asset_t *asset);
-void ore_copper_render(asset_t *asset);
 
 #endif//TRADESKILL_ORE_COPPER_H

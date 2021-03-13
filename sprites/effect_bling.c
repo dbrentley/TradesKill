@@ -12,10 +12,7 @@ void effect_bling_init(asset_t *asset) {
     asset->sprite->size.width = (int) game->atlas->sprite_width;
     asset->sprite->size.height = (int) game->atlas->sprite_height;
 
-    asset->init = effect_bling_init;
     asset->update = effect_bling_update;
-    asset->tick = effect_bling_tick;
-    asset->render = effect_bling_render;
 
     asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 7, 0.95f);
 }
@@ -27,7 +24,3 @@ void effect_bling_update(asset_t *asset) {
 
     asset_animate(asset);
 }
-
-void effect_bling_tick(asset_t *asset) {}
-
-void effect_bling_render(asset_t *asset) {}

@@ -9,7 +9,5 @@
 
 void effect_bling_init(asset_t *asset);
 void effect_bling_update(asset_t *asset);
-void effect_bling_render(asset_t *asset);
-void effect_bling_tick(asset_t *asset);
 
 #endif//TRADESKILL_EFFECT_BLING_H

@@ -89,9 +89,6 @@ void game_render() {
     for (int x = 0; x < game->assets_count; x++) {
         if (game->assets[x]->index != -1) {
             game->assets[x]->update(game->assets[x]);
-            if (game->assets[x]->visible) {
-                game->assets[x]->render(game->assets[x]);
-            }
         }
     }
 

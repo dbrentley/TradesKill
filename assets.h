@@ -13,10 +13,9 @@
 
 typedef struct asset_t asset_t;
 
-typedef void (*asset_init_f)(asset_t *);
+typedef enum { INIT, UPDATE, TICK } asset_event_e;
+
 typedef void (*asset_update_f)(asset_t *);
-typedef void (*asset_render_f)(asset_t *);
-typedef void (*asset_tick_f)(asset_t *);
 
 typedef struct {
     float x;
@@ -31,19 +30,15 @@ typedef struct {
 } asset_position_t;
 
 struct asset_t {
-    sprite_t *sprite;
-    sprite_t *parent;
+    asset_position_t position;
     bool visible;
+    bool one_shot;
     float z;
     int index;
-    asset_position_t position;
-    asset_init_f init;
+    sprite_t *sprite;
     asset_update_f update;
-    asset_tick_f tick;
-    asset_render_f render;
     animation_t **animations;
     animation_type_e state;
-    int animation_count;
 };
 
 typedef struct {

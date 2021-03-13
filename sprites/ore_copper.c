@@ -12,13 +12,9 @@ void ore_copper_init(asset_t *asset) {
     asset->sprite->size.width = (int) game->atlas->sprite_width;
     asset->sprite->size.height = (int) game->atlas->sprite_height;
 
-    asset->init = ore_copper_init;
     asset->update = ore_copper_update;
-    asset->render = ore_copper_render;
 
     asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 1, 0);
 }
 
-void ore_copper_update(asset_t *asset) {}
-
-void ore_copper_render(asset_t *asset) {}
+void ore_copper_update(asset_t *asset) { asset_animate(asset); }

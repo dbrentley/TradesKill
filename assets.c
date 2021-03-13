@@ -19,8 +19,10 @@ void assets_init() {
     for (x = 0; x < MAX_SPRITES; x++) {
         game->assets[x] = malloc(sizeof(asset_t));
         checkm(game->assets[x]);
-        game->assets[x]->parent = NULL;
         game->assets[x]->index = -1;
+        game->assets[x]->one_shot = false;
+        game->assets[x]->visible = false;
+        game->assets[x]->z = 0;
         game->assets[x]->animations = malloc(TOTAL * sizeof(animation_t *));
         checkm(game->assets[x]->animations);
     }
@@ -49,35 +51,36 @@ asset_t *asset_create(sprite_type_e type) {
     game->assets[i]->index = i;
     game->assets[i]->visible = true;
     game->assets[i]->state = IDLE;
+    game->assets[i]->position.x = 0;
+    game->assets[i]->position.y = 0;
 
+    float pos_x, pos_y = 0;
     vertex_t v[4];
 
     // ll
-    v[0].position.x = 0;
-    v[0].position.y = 0;
+    v[0].position.x = pos_x;
+    v[0].position.y = pos_y;
     v[0].uv.u = game->assets[i]->animations[IDLE]->frames[0];
     v[0].uv.v = game->assets[i]->animations[IDLE]->frames[1];
     // lr
-    v[1].position.x = 1.0f;
-    v[1].position.y = 0;
+    v[1].position.x = pos_x + 1.0f;
+    v[1].position.y = pos_y;
     v[1].uv.u = game->assets[i]->animations[IDLE]->frames[2];
     v[1].uv.v = game->assets[i]->animations[IDLE]->frames[3];
     // ur
-    v[2].position.x = 1.0f;
-    v[2].position.y = 1.0f;
+    v[2].position.x = pos_x + 1.0f;
+    v[2].position.y = pos_y + 1.0f;
     v[2].uv.u = game->assets[i]->animations[IDLE]->frames[4];
     v[2].uv.v = game->assets[i]->animations[IDLE]->frames[5];
     // ul
-    v[3].position.x = 0;
-    v[3].position.y = 1.0f;
+    v[3].position.x = pos_x;
+    v[3].position.y = pos_y + 1.0f;
     v[3].uv.u = game->assets[i]->animations[IDLE]->frames[6];
     v[3].uv.v = game->assets[i]->animations[IDLE]->frames[7];
 
     int offset = i * 16;
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
 
-    game->assets[i]->position.x = 0;
-    game->assets[i]->position.y = 0;
 
     return game->assets[i];
 }
@@ -137,11 +140,11 @@ void asset_animate(asset_t *asset) {
                     asset->animations[asset->state]->time.start_time >
             1.0 - asset->animations[asset->state]->speed) {
 
-            asset->tick(asset);
             asset->animations[asset->state]->current_frame++;
             if (asset->animations[asset->state]->current_frame ==
                 asset->animations[asset->state]->frame_total) {
                 asset->animations[asset->state]->current_frame = 0;
+                if (asset->one_shot) { asset_remove(asset); }
             }
 
             asset->animations[asset->state]->time.start_time =
@@ -194,6 +197,7 @@ void asset_destroy(asset_t *asset) {
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
 
     game->assets[asset->index]->index = -1;
+    game->assets[asset->index]->visible = false;
 }
 
 void assets_destroy() {
