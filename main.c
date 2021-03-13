@@ -8,7 +8,6 @@ game_t *game;
 
 int main() {
     game_init("TradesKill");
-
     pthread_t queue_processing_add_thread;
     pthread_create(&queue_processing_add_thread, NULL, asset_process_add_queue,
                    NULL);
@@ -26,6 +25,9 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
+
+    asset_add(ORE_GOLD);
+    asset_add(EFFECT_BLING);
 
     while (!game->window->should_close && game->running) {
         timer_start();

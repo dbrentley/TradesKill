@@ -37,8 +37,8 @@ void timer_end() {
         game->timer->frame_count = 0;
         game->timer->previous_time = game->timer->time;
 #ifdef DEBUG_ON
-        logline(DEBUG, "FPS: %i, %d", game->timer->fps,
-                queue_size(&game->queues.asset_add));
+        logline(DEBUG, "FPS: %i, %d, %f", game->timer->fps,
+                queue_size(&game->queues.asset_add), mtwist_drand(game->mt));
 #endif
     }
 }

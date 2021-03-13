@@ -8,7 +8,7 @@
 #define DEBUG_ON
 #define GLEW_STATIC
 
-#define DEFAULT_WIDTH 1200
+#define DEFAULT_WIDTH 1280
 #define DEFAULT_HEIGHT 720
 #define MAX_SPRITES 1000000
 

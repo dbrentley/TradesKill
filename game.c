@@ -22,6 +22,8 @@ void game_init(char *name) {
     }
 
     game->running = false;
+    game->mt = mtwist_new();
+    checkm(game->mt);
 
     queue_init(&game->queues.alloc);
     queue_init(&game->queues.asset_add);

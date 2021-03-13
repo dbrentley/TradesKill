@@ -8,8 +8,8 @@
 #include "globals.h"
 
 typedef struct {
-    float x;
-    float y;
+    int x;
+    int y;
 } atlas_position_t;
 
 typedef struct {

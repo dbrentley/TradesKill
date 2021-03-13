@@ -7,6 +7,7 @@
 
 #include "assets.h"
 #include "atlas.h"
+#include "libmtwist/mtwist.h"
 #include "queue.h"
 #include "state.h"
 #include "timer.h"
@@ -30,6 +31,7 @@ typedef struct {
     asset_t **assets;
     bool running;
     queues_t queues;
+    mtwist *mt;
 } game_t;
 
 extern game_t *game;

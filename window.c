@@ -67,7 +67,7 @@ void window_init(char *title) {
 
     game->window->width = DEFAULT_WIDTH;
     game->window->height = DEFAULT_HEIGHT;
-    game->window->zoom = 25.0f;
+    game->window->zoom = 5.0f;
     game->window->should_close = false;
     game->window->should_resize = false;
     game->window->update_aspect = false;
@@ -79,7 +79,7 @@ void window_init(char *title) {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-    // glfwWindowHint(GLFW_SAMPLES, 4); // anti-alias
+    //glfwWindowHint(GLFW_SAMPLES, 4); // anti-alias
 
     game->window->gl_window = glfwCreateWindow(
             game->window->width, game->window->height, title, NULL, NULL);

@@ -16,6 +16,8 @@ void ore_gold_init(asset_t *asset) {
     asset->init = ore_gold_init;
     asset->update = ore_gold_update;
     asset->render = ore_gold_render;
+
+    asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 1, 0);
 }
 
 void ore_gold_update(asset_t *asset) {}

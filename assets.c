@@ -4,7 +4,8 @@
 
 #include "assets.h"
 #include "game.h"
-#include "logger.h"
+#include "queue.h"
+#include "sprites/effect_bling.h"
 #include "sprites/ore_copper.h"
 #include "sprites/ore_gold.h"
 #include "utils.h"
@@ -18,21 +19,17 @@ void assets_init() {
     for (x = 0; x < MAX_SPRITES; x++) {
         game->assets[x] = malloc(sizeof(asset_t));
         checkm(game->assets[x]);
+        game->assets[x]->parent = NULL;
         game->assets[x]->index = -1;
+        game->assets[x]->animations = malloc(TOTAL * sizeof(animation_t *));
+        checkm(game->assets[x]->animations);
     }
-    logline(INFO, "Initialized %d asset slots", x);
 }
 
-void assets_destroy() {
-    for (int x = 0; x < MAX_SPRITES; x++) { asset_destroy(game->assets[x]); }
-}
-
-asset_t *asset_create(float x, float y, sprite_type_e type) {
-    //pthread_mutex_lock(&lock);
+asset_t *asset_create(sprite_type_e type) {
     int i;
     for (i = 0; i < game->assets_count; i++) {
         if (game->assets[i]->index == -1) { break; }
-        // TODO: do something when max sprite limit reached
     }
 
     switch (type) {
@@ -42,62 +39,120 @@ asset_t *asset_create(float x, float y, sprite_type_e type) {
         case ORE_COPPER:
             ore_copper_init(game->assets[i]);
             break;
+        case EFFECT_BLING:
+            effect_bling_init(game->assets[i]);
+            break;
         default:
             break;
     }
 
     game->assets[i]->index = i;
-
-    float psw = game->atlas->pixel_size_width * game->atlas->sprite_width;
-    float psh = game->atlas->pixel_size_height * game->atlas->sprite_height;
+    game->assets[i]->visible = true;
+    game->assets[i]->state = IDLE;
 
     vertex_t v[4];
-    float x_off = x - 0.5f;
-    float y_off = y - 0.5f;
 
     // ll
-    v[0].position.x = x_off;
-    v[0].position.y = y_off;
-    v[0].uv.u = game->assets[i]->sprite->atlas_offset.x * psw;
-    v[0].uv.v = (game->assets[i]->sprite->atlas_offset.y * psh) + psh;
+    v[0].position.x = 0;
+    v[0].position.y = 0;
+    v[0].uv.u = game->assets[i]->animations[IDLE]->frames[0];
+    v[0].uv.v = game->assets[i]->animations[IDLE]->frames[1];
     // lr
-    v[1].position.x = x_off + 1.0f;
-    v[1].position.y = y_off;
-    v[1].uv.u = (game->assets[i]->sprite->atlas_offset.x * psw) + psw;
-    v[1].uv.v = (game->assets[i]->sprite->atlas_offset.y * psh) + psh;
+    v[1].position.x = 1.0f;
+    v[1].position.y = 0;
+    v[1].uv.u = game->assets[i]->animations[IDLE]->frames[2];
+    v[1].uv.v = game->assets[i]->animations[IDLE]->frames[3];
     // ur
-    v[2].position.x = x_off + 1.0f;
-    v[2].position.y = y_off + 1.0f;
-    v[2].uv.u = (game->assets[i]->sprite->atlas_offset.x * psw) + psw;
-    v[2].uv.v = game->assets[i]->sprite->atlas_offset.y * psh;
+    v[2].position.x = 1.0f;
+    v[2].position.y = 1.0f;
+    v[2].uv.u = game->assets[i]->animations[IDLE]->frames[4];
+    v[2].uv.v = game->assets[i]->animations[IDLE]->frames[5];
     // ul
-    v[3].position.x = x_off;
-    v[3].position.y = y_off + 1.0f;
-    v[3].uv.u = game->assets[i]->sprite->atlas_offset.x * psw;
-    v[3].uv.v = game->assets[i]->sprite->atlas_offset.y * psh;
+    v[3].position.x = 0;
+    v[3].position.y = 1.0f;
+    v[3].uv.u = game->assets[i]->animations[IDLE]->frames[6];
+    v[3].uv.v = game->assets[i]->animations[IDLE]->frames[7];
 
     int offset = i * 16;
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
-    //    free(v);
 
-    game->assets[i]->position.x = x;
-    game->assets[i]->position.y = y;
-    game->assets[i]->visible = true;
+    game->assets[i]->position.x = 0;
+    game->assets[i]->position.y = 0;
 
-    //pthread_mutex_unlock(&lock);
     return game->assets[i];
 }
 
-void asset_add(float x, float y, sprite_type_e type) {
+void asset_add(sprite_type_e type) {
     asset_add_queue_entry_t *item = malloc(sizeof(asset_add_queue_entry_t));
     item->type = type;
-    item->x = x;
-    item->y = y;
     queue_append(&game->queues.asset_add, item);
 }
 
 void asset_remove(asset_t *asset) {
     queue_append(&game->queues.asset_remove, asset);
+}
+
+void asset_animation_add(asset_t *asset, animation_t *animation) {
+    animation_t *anim = malloc(sizeof(animation_t));
+    checkm(anim);
+}
+
+void asset_animate(asset_t *asset) {
+    if (asset->index != -1 &&
+        asset->animations[asset->state]->frame_total > 1) {
+
+        float uv[asset->animations[asset->state]->frame_total * 8];
+        for (int x = 0; x < asset->animations[asset->state]->frame_total * 8;
+             x++) {
+            uv[x] = asset->animations[asset->state]->frames[x];
+        }
+
+        vertex_t v[4];
+        int current_frame = asset->animations[asset->state]->current_frame;
+        // ll
+        v[0].position.x = asset->position.x;
+        v[0].position.y = asset->position.y;
+        v[0].uv.u = uv[0 + current_frame * 8];
+        v[0].uv.v = uv[1 + current_frame * 8];
+        // lr
+        v[1].position.x = asset->position.x + 1.0f;
+        v[1].position.y = 0;
+        v[1].uv.u = uv[2 + current_frame * 8];
+        v[1].uv.v = uv[3 + current_frame * 8];
+        // ur
+        v[2].position.x = asset->position.x + 1.0f;
+        v[2].position.y = asset->position.y + 1.0f;
+        v[2].uv.u = uv[4 + current_frame * 8];
+        v[2].uv.v = uv[5 + current_frame * 8];
+        // ul
+        v[3].position.x = asset->position.x;
+        v[3].position.y = asset->position.y + 1.0f;
+        v[3].uv.u = uv[6 + current_frame * 8];
+        v[3].uv.v = uv[7 + current_frame * 8];
+
+        int offset = asset->index * 16;
+        memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
+
+        if (asset->animations[asset->state]->time.end_time -
+                    asset->animations[asset->state]->time.start_time >
+            1.0 - asset->animations[asset->state]->speed) {
+
+            asset->tick(asset);
+            asset->animations[asset->state]->current_frame++;
+            if (asset->animations[asset->state]->current_frame ==
+                asset->animations[asset->state]->frame_total) {
+                asset->animations[asset->state]->current_frame = 0;
+            }
+
+            asset->animations[asset->state]->time.start_time =
+                    asset->animations[asset->state]->time.end_time;
+        }
+        asset->animations[asset->state]->time.end_time = glfwGetTime();
+    }
+}
+
+void asset_set_active_animation(asset_t *asset, animation_type_e type) {
+    asset->state = type;
 }
 
 asset_t *asset_get_by_index(int id) {
@@ -112,7 +167,7 @@ void *asset_process_add_queue() {
         for (int x = 0; x < queue_size(&game->queues.asset_add); x++) {
             asset_add_queue_entry_t *item = queue_pop(&game->queues.asset_add);
             if (item != NULL) {
-                asset_create(item->x, item->y, item->type);
+                asset_create(item->type);
                 free(item);
             }
         }
@@ -132,7 +187,6 @@ void *asset_process_rem_queue() {
 
 void asset_destroy(asset_t *asset) {
     if (asset == NULL || asset->index == -1) { return; }
-    //pthread_mutex_lock(&lock);
     float v[] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
@@ -140,5 +194,8 @@ void asset_destroy(asset_t *asset) {
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
 
     game->assets[asset->index]->index = -1;
-    //pthread_mutex_unlock(&lock);
+}
+
+void assets_destroy() {
+    for (int x = 0; x < MAX_SPRITES; x++) { ffree(game->assets[x]); }
 }
