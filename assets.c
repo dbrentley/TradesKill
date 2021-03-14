@@ -15,16 +15,19 @@
 void assets_init() {
     game->assets = malloc(MAX_SPRITES * sizeof(asset_t *));
     checkm(game->assets);
-    for (int x = 0; x < MAX_SPRITES; x++) {
-        game->assets[x] = malloc(sizeof(asset_t));
-        checkm(game->assets[x]);
-        game->assets[x]->index = -1;
-        game->assets[x]->one_shot = false;
-        game->assets[x]->visible = false;
-        game->assets[x]->z = 0;
-        game->assets[x]->animations = malloc(TOTAL * sizeof(animation_t *));
-        checkm(game->assets[x]->animations);
-    }
+    for (int x = 0; x < MAX_SPRITES; x++) { asset_init(x); }
+}
+
+void asset_init(int n) {
+    game->assets[n] = malloc(sizeof(asset_t));
+    checkm(game->assets[n]);
+    game->assets[n]->index = -1;
+    game->assets[n]->one_shot = false;
+    game->assets[n]->visible = false;
+    game->assets[n]->z = 0;
+    game->assets[n]->animations = malloc(TOTAL * sizeof(animation_t *));
+    checkm(game->assets[n]->animations);
+    for (int y = 0; y < TOTAL; y++) { game->assets[n]->animations[y] = NULL; }
 }
 
 asset_t *asset_create(sprite_type_e type) {
@@ -51,29 +54,29 @@ asset_t *asset_create(sprite_type_e type) {
     game->assets[i]->visible = true;
     game->assets[i]->one_shot = false;
     game->assets[i]->state = IDLE;
-    game->assets[i]->position.x = 0;
-    game->assets[i]->position.y = 0;
+    game->assets[i]->position.x = -0.5f;
+    game->assets[i]->position.y = -0.5f;
 
     vertex_t v[4];
 
     // ll
-    v[0].position.x = 0;
-    v[0].position.y = 0;
+    v[0].position.x = -0.5f;
+    v[0].position.y = -0.5f;
     v[0].uv.u = game->assets[i]->animations[IDLE]->frames[0];
     v[0].uv.v = game->assets[i]->animations[IDLE]->frames[1];
     // lr
-    v[1].position.x = 1.0f;
-    v[1].position.y = 0;
+    v[1].position.x = 0.5f;
+    v[1].position.y = -0.5f;
     v[1].uv.u = game->assets[i]->animations[IDLE]->frames[2];
     v[1].uv.v = game->assets[i]->animations[IDLE]->frames[3];
     // ur
-    v[2].position.x = 1.0f;
-    v[2].position.y = 1.0f;
+    v[2].position.x = 0.5f;
+    v[2].position.y = 0.5f;
     v[2].uv.u = game->assets[i]->animations[IDLE]->frames[4];
     v[2].uv.v = game->assets[i]->animations[IDLE]->frames[5];
     // ul
-    v[3].position.x = 0;
-    v[3].position.y = 1.0f;
+    v[3].position.x = -0.5f;
+    v[3].position.y = 0.5f;
     v[3].uv.u = game->assets[i]->animations[IDLE]->frames[6];
     v[3].uv.v = game->assets[i]->animations[IDLE]->frames[7];
 
@@ -111,6 +114,7 @@ void asset_animate(asset_t *asset) {
 
         vertex_t v[4];
         int current_frame = asset->animations[asset->state]->current_frame;
+
         // ll
         v[0].position.x = asset->position.x;
         v[0].position.y = asset->position.y;
@@ -135,21 +139,12 @@ void asset_animate(asset_t *asset) {
         int offset = asset->index * 16;
         memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
 
-        if (asset->animations[asset->state]->time.end_time -
-                    asset->animations[asset->state]->time.start_time >
-            1.0 - asset->animations[asset->state]->speed) {
-
-            asset->animations[asset->state]->current_frame++;
-            if (asset->animations[asset->state]->current_frame ==
-                asset->animations[asset->state]->frame_total) {
-                asset->animations[asset->state]->current_frame = 0;
-                if (asset->one_shot) { asset_remove(asset); }
-            }
-
-            asset->animations[asset->state]->time.start_time =
-                    asset->animations[asset->state]->time.end_time;
+        asset->animations[asset->state]->current_frame++;
+        if (asset->animations[asset->state]->current_frame ==
+            asset->animations[asset->state]->frame_total) {
+            asset->animations[asset->state]->current_frame = 0;
+            if (asset->one_shot) { asset_remove(asset); }
         }
-        asset->animations[asset->state]->time.end_time = glfwGetTime();
     }
 }
 
@@ -170,7 +165,7 @@ void *asset_process_add_queue() {
             asset_add_queue_entry_t *item = queue_pop(&game->queues.asset_add);
             if (item != NULL) {
                 asset_create(item->type);
-                free(item);
+                ffree(item, "asset_process_add_queue");
             }
         }
     }
@@ -182,7 +177,6 @@ void *asset_process_rem_queue() {
         for (int x = 0; x < queue_size(&game->queues.asset_remove); x++) {
             asset_t *item = queue_pop(&game->queues.asset_remove);
             if (item != NULL) { asset_destroy(item); }
-            for (int y = 0; y < TOTAL; y++) { item->animations[y] = NULL; }
         }
     }
     return NULL;
@@ -196,11 +190,14 @@ void asset_destroy(asset_t *asset) {
     int offset = asset->index * 16;
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
 
-    game->assets[asset->index]->index = -1;
+    for (int x = 0; x < TOTAL; x++) { animation_destroy(asset->animations[x]); }
+    asset->index = -1;
+
+    //ffree(asset, "asset asset_destroy");
 }
 
 void assets_destroy() {
     for (int x = 0; x < MAX_SPRITES; x++) {
-        ffree(game->assets[x], "207 assets.c");
+        ffree(game->assets[x], "assets_destroy");
     }
 }

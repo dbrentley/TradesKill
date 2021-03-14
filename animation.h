@@ -25,7 +25,7 @@ typedef struct {
     int frame_atlas_offset_y;
     int frame_total;
     int current_frame;
-    animation_time_t time;
+    animation_time_t *time;
 } animation_t;
 
 /**

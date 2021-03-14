@@ -17,4 +17,13 @@ void effect_bling_init(asset_t *asset) {
     asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 7, 0.95f);
 }
 
-void effect_bling_update(asset_t *asset) { asset_animate(asset); }
+void effect_bling_update(asset_t *asset) {
+    asset->animations[asset->state]->time->time = glfwGetTime();
+
+    if (asset->animations[asset->state]->time->time -
+                asset->animations[asset->state]->time->previous_time >=
+        1.0 - asset->animations[asset->state]->speed) {
+        asset_animate(asset);
+        asset->animations[asset->state]->time->previous_time = glfwGetTime();
+    }
+}

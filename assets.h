@@ -47,6 +47,7 @@ typedef struct {
 } vertex_t;
 
 void assets_init();
+void asset_init(int n);
 
 void assets_destroy();
 

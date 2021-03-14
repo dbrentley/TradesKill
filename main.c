@@ -26,6 +26,7 @@ int main() {
 
 
     asset_add(ORE_GOLD);
+    //asset_add(EFFECT_BLING);
 
     while (!game->window->should_close && game->running) {
         timer_start();

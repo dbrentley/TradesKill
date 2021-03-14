@@ -12,6 +12,8 @@ animation_t *animation_create(animation_type_e type, sprite_t *sprite,
                               int frame_total, float speed) {
     animation_t *anim = malloc(sizeof(animation_t));
     checkm(anim);
+    anim->time = malloc(sizeof(animation_time_t));
+    checkm(anim->time);
 
     anim->type = type;
     anim->current_frame = 0;
@@ -20,12 +22,10 @@ animation_t *animation_create(animation_type_e type, sprite_t *sprite,
     anim->speed = speed;
     anim->frame_total = frame_total;
 
-    animation_time_t time;
-    time.delta = 0;
-    time.time = glfwGetTime();
-    time.start_time = 0;
-    time.end_time = glfwGetTime();
-    anim->time = time;
+    anim->time->delta = 0;
+    anim->time->time = 0;
+    anim->time->start_time = 0;
+    anim->time->end_time = 0;
 
 
     anim->frames = malloc(frame_total * 8 * sizeof(float));
@@ -66,7 +66,7 @@ animation_t *animation_create(animation_type_e type, sprite_t *sprite,
 
 void animation_destroy(animation_t *animation) {
     if (animation != NULL) {
-        ffree(animation->frames, "69 animation.c");
-        ffree(animation, "70 animation.c");
+        ffree(animation->frames, "frames animation_destroy");
+        ffree(animation, "animation_destroy");
     }
 }
