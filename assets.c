@@ -30,7 +30,7 @@ void asset_init(int n) {
     for (int y = 0; y < TOTAL; y++) { game->assets[n]->animations[y] = NULL; }
 }
 
-asset_t *asset_create(sprite_type_e type) {
+asset_t *asset_create(sprite_type_e type, float x, float y) {
     int i;
     for (i = 0; i < game->assets_count; i++) {
         if (game->assets[i]->index == -1) { break; }
@@ -54,29 +54,29 @@ asset_t *asset_create(sprite_type_e type) {
     game->assets[i]->visible = true;
     game->assets[i]->one_shot = false;
     game->assets[i]->state = IDLE;
-    game->assets[i]->position.x = -0.5f;
-    game->assets[i]->position.y = -0.5f;
+    game->assets[i]->position.x = x;
+    game->assets[i]->position.y = y;
 
     vertex_t v[4];
 
     // ll
-    v[0].position.x = -0.5f;
-    v[0].position.y = -0.5f;
+    v[0].position.x = game->assets[i]->position.x - 0.5f;
+    v[0].position.y = game->assets[i]->position.y - 0.5f;
     v[0].uv.u = game->assets[i]->animations[IDLE]->frames[0];
     v[0].uv.v = game->assets[i]->animations[IDLE]->frames[1];
     // lr
-    v[1].position.x = 0.5f;
-    v[1].position.y = -0.5f;
+    v[1].position.x = game->assets[i]->position.x + 0.5f;
+    v[1].position.y = game->assets[i]->position.y - 0.5f;
     v[1].uv.u = game->assets[i]->animations[IDLE]->frames[2];
     v[1].uv.v = game->assets[i]->animations[IDLE]->frames[3];
     // ur
-    v[2].position.x = 0.5f;
-    v[2].position.y = 0.5f;
+    v[2].position.x = game->assets[i]->position.x + 0.5f;
+    v[2].position.y = game->assets[i]->position.y + 0.5f;
     v[2].uv.u = game->assets[i]->animations[IDLE]->frames[4];
     v[2].uv.v = game->assets[i]->animations[IDLE]->frames[5];
     // ul
-    v[3].position.x = -0.5f;
-    v[3].position.y = 0.5f;
+    v[3].position.x = game->assets[i]->position.x - 0.5f;
+    v[3].position.y = game->assets[i]->position.y + 0.5f;
     v[3].uv.u = game->assets[i]->animations[IDLE]->frames[6];
     v[3].uv.v = game->assets[i]->animations[IDLE]->frames[7];
 
@@ -87,9 +87,11 @@ asset_t *asset_create(sprite_type_e type) {
     return game->assets[i];
 }
 
-void asset_add(sprite_type_e type) {
+void asset_add(sprite_type_e type, float x, float y) {
     asset_add_queue_entry_t *item = malloc(sizeof(asset_add_queue_entry_t));
     item->type = type;
+    item->x = x;
+    item->y = y;
     queue_append(&game->queues.asset_add, item);
 }
 
@@ -114,7 +116,6 @@ void asset_animate(asset_t *asset) {
 
         vertex_t v[4];
         int current_frame = asset->animations[asset->state]->current_frame;
-
         // ll
         v[0].position.x = asset->position.x;
         v[0].position.y = asset->position.y;
@@ -122,7 +123,7 @@ void asset_animate(asset_t *asset) {
         v[0].uv.v = uv[1 + current_frame * 8];
         // lr
         v[1].position.x = asset->position.x + 1.0f;
-        v[1].position.y = 0;
+        v[1].position.y = asset->position.y;
         v[1].uv.u = uv[2 + current_frame * 8];
         v[1].uv.v = uv[3 + current_frame * 8];
         // ur
@@ -137,7 +138,7 @@ void asset_animate(asset_t *asset) {
         v[3].uv.v = uv[7 + current_frame * 8];
 
         int offset = asset->index * 16;
-        memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
+        memcpy(game->gle->vertex_buffer + offset, v, 4 * sizeof(vertex_t));
 
         asset->animations[asset->state]->current_frame++;
         if (asset->animations[asset->state]->current_frame ==
@@ -164,7 +165,7 @@ void *asset_process_add_queue() {
         for (int x = 0; x < queue_size(&game->queues.asset_add); x++) {
             asset_add_queue_entry_t *item = queue_pop(&game->queues.asset_add);
             if (item != NULL) {
-                asset_create(item->type);
+                asset_create(item->type, item->x, item->y);
                 ffree(item, "asset_process_add_queue");
             }
         }

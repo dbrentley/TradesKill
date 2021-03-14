@@ -24,9 +24,7 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-
-    asset_add(ORE_GOLD);
-    //asset_add(EFFECT_BLING);
+    asset_add(ORE_GOLD, 0, 0);
 
     while (!game->window->should_close && game->running) {
         timer_start();

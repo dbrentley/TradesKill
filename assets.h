@@ -51,9 +51,9 @@ void asset_init(int n);
 
 void assets_destroy();
 
-asset_t *asset_create(sprite_type_e type);
+asset_t *asset_create(sprite_type_e type, float x, float y);
 
-void asset_add(sprite_type_e type);
+void asset_add(sprite_type_e type, float x, float y);
 
 void asset_remove(asset_t *asset);
 
