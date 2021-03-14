@@ -5,7 +5,7 @@
 #ifndef TRADESKILL_UTILS_H
 #define TRADESKILL_UTILS_H
 
-void ffree(void *obj);
+void ffree(void *obj, char *v);
 
 void checkm(void *obj);
 

@@ -4,7 +4,6 @@
 
 #include "ore_gold.h"
 #include "../game.h"
-#include "../logger.h"
 
 void ore_gold_init(asset_t *asset) {
     asset->sprite = sprite_create(ORE_GOLD);
@@ -24,6 +23,18 @@ void ore_gold_update(asset_t *asset) {
 
     if (game->timer->time - game->timer->previous_time > 1.0) {
         double r = mtwist_drand(game->mt);
-        if (r > 0.01) { return; }
+        if (r > 0.25) { return; }
+        asset_t *b = asset_create(EFFECT_BLING);
+        b->one_shot = true;
+        if (r > 0.1) {
+            b->position.x = asset->position.x + (float) r;
+        } else {
+            b->position.x = asset->position.x - (float) r;
+        }
+        if (r > 0.15) {
+            b->position.y = asset->position.y + (float) r;
+        } else {
+            b->position.y = asset->position.y - (float) r;
+        }
     }
 }

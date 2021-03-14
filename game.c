@@ -106,10 +106,6 @@ void game_destroy() {
     assets_destroy();
     atlas_destroy();
 
-    //    queue_destroy(&game->queues.alloc);
-    //    queue_destroy(&game->queues.asset_add);
-    //    queue_destroy(&game->queues.asset_remove);
-
-    ffree(game->gle);
-    ffree(game);
+    ffree(game->gle, "109 game.c");
+    ffree(game, "110 game.c");
 }

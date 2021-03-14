@@ -17,10 +17,4 @@ void effect_bling_init(asset_t *asset) {
     asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 7, 0.95f);
 }
 
-void effect_bling_update(asset_t *asset) {
-    if (asset->animations[asset->state]->current_frame == 0) {
-        if (mtwist_drand(game->mt) > 0.01) { return; }
-    }
-
-    asset_animate(asset);
-}
+void effect_bling_update(asset_t *asset) { asset_animate(asset); }

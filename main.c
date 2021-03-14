@@ -1,6 +1,5 @@
 #include "game.h"
 #include "globals.h"
-#include "logger.h"
 #include "shader.h"
 #include "timer.h"
 
@@ -53,7 +52,6 @@ int main() {
     pthread_join(queue_processing_add_thread, NULL);
     pthread_join(queue_processing_rem_thread, NULL);
     game_destroy();
-    logline(INFO, "Exiting");
 
     return 0;
 }

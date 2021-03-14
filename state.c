@@ -13,4 +13,4 @@ void state_init() {
     checkm(game->state);
 }
 
-void state_destroy() { ffree(game->state); }
+void state_destroy() { ffree(game->state, "16 state.c"); }

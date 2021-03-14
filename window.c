@@ -130,6 +130,6 @@ void window_init(char *title) {
 }
 
 void window_destroy() {
-    ffree(game->window->gl_window);
-    ffree(game->window);
+    ffree(game->window->gl_window, "133 window.c");
+    ffree(game->window, "134 window.c");
 }

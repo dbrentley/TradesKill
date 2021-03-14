@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 
-void ffree(void *obj) {
+void ffree(void *obj, char *v) {
     if (obj != NULL) {
         free(obj);
         obj = NULL;

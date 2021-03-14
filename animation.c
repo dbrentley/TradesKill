@@ -65,6 +65,8 @@ animation_t *animation_create(animation_type_e type, sprite_t *sprite,
 }
 
 void animation_destroy(animation_t *animation) {
-    ffree(animation->frames);
-    ffree(animation);
+    if (animation != NULL) {
+        ffree(animation->frames, "69 animation.c");
+        ffree(animation, "70 animation.c");
+    }
 }
