@@ -25,12 +25,15 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-    float fmin = -50.0f;
-    float fmax = 50.0f;
-    for (int z = 0; z < 34000; z++) {
-        asset_add(ORE_GOLD, float_rand(fmin, fmax), float_rand(fmin, fmax),
-                  false);
-    }
+    //    float fmin = -50.0f;
+    //    float fmax = 50.0f;
+    //    for (int z = 0; z < 34000; z++) {
+    //        asset_add(ORE_GOLD, float_rand(fmin, fmax), float_rand(fmin, fmax),
+    //                  false);
+    //    }
+
+    asset_add(ORE_GOLD, -2.0f, 0, false);
+    asset_add(HERO, 0, 0, false);
 
     while (!game->window->should_close && game->running) {
         timer_start();

@@ -21,7 +21,7 @@ add_executable(TradesKill main.c globals.h keyboard.c keyboard.h window.c
         sprites/ore_gold.c sprites/ore_gold.h assets.h assets.c
         sprites/ore_copper.c sprites/ore_copper.h queue.h queue.c
         sprites/effect_bling.c sprites/effect_bling.h libmtwist/mt.c
-        libmtwist/mtwist.h libmtwist/mtwist_internal.h libmtwist/seed.c sprites/common.c sprites/common.h)
+        libmtwist/mtwist.h libmtwist/mtwist_internal.h libmtwist/seed.c sprites/common.c sprites/common.h sprites/hero.c sprites/hero.h)
 
 target_link_libraries(TradesKill GLEW::GLEW ${GLFW_STATIC_LIBRARIES}
         ${OPENGL_LIBRARIES} Freetype::Freetype pthread stb m)

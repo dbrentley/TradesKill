@@ -7,6 +7,7 @@
 #include "logger.h"
 #include "queue.h"
 #include "sprites/effect_bling.h"
+#include "sprites/hero.h"
 #include "sprites/ore_copper.h"
 #include "sprites/ore_gold.h"
 #include "utils.h"
@@ -38,6 +39,9 @@ asset_t *asset_create(sprite_type_e type, float x, float y, bool one_shot) {
     }
 
     switch (type) {
+        case HERO:
+            hero_init(game->assets[i]);
+            break;
         case ORE_GOLD:
             ore_gold_init(game->assets[i]);
             break;
