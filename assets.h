@@ -20,6 +20,7 @@ typedef void (*asset_update_f)(asset_t *);
 typedef struct {
     float x;
     float y;
+    bool one_shot;
     sprite_type_e type;
     asset_t *asset;
 } asset_add_queue_entry_t;
@@ -51,9 +52,9 @@ void asset_init(int n);
 
 void assets_destroy();
 
-asset_t *asset_create(sprite_type_e type, float x, float y);
+asset_t *asset_create(sprite_type_e type, float x, float y, bool one_shot);
 
-void asset_add(sprite_type_e type, float x, float y);
+void asset_add(sprite_type_e type, float x, float y, bool one_shot);
 
 void asset_remove(asset_t *asset);
 

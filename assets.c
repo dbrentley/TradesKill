@@ -4,6 +4,7 @@
 
 #include "assets.h"
 #include "game.h"
+#include "logger.h"
 #include "queue.h"
 #include "sprites/effect_bling.h"
 #include "sprites/ore_copper.h"
@@ -30,7 +31,7 @@ void asset_init(int n) {
     for (int y = 0; y < TOTAL; y++) { game->assets[n]->animations[y] = NULL; }
 }
 
-asset_t *asset_create(sprite_type_e type, float x, float y) {
+asset_t *asset_create(sprite_type_e type, float x, float y, bool one_shot) {
     int i;
     for (i = 0; i < game->assets_count; i++) {
         if (game->assets[i]->index == -1) { break; }
@@ -52,7 +53,7 @@ asset_t *asset_create(sprite_type_e type, float x, float y) {
 
     game->assets[i]->index = i;
     game->assets[i]->visible = true;
-    game->assets[i]->one_shot = false;
+    game->assets[i]->one_shot = one_shot;
     game->assets[i]->state = IDLE;
     game->assets[i]->position.x = x;
     game->assets[i]->position.y = y;
@@ -87,11 +88,16 @@ asset_t *asset_create(sprite_type_e type, float x, float y) {
     return game->assets[i];
 }
 
-void asset_add(sprite_type_e type, float x, float y) {
+void asset_add(sprite_type_e type, float x, float y, bool one_shot) {
+    int add_size = queue_size(&game->queues.asset_add);
+    int rem_size = queue_size(&game->queues.asset_remove);
+    if ((add_size - rem_size) >= MAX_SPRITES) { return; }
+
     asset_add_queue_entry_t *item = malloc(sizeof(asset_add_queue_entry_t));
     item->type = type;
     item->x = x;
     item->y = y;
+    item->one_shot = one_shot;
     queue_append(&game->queues.asset_add, item);
 }
 
@@ -165,7 +171,7 @@ void *asset_process_add_queue() {
         for (int x = 0; x < queue_size(&game->queues.asset_add); x++) {
             asset_add_queue_entry_t *item = queue_pop(&game->queues.asset_add);
             if (item != NULL) {
-                asset_create(item->type, item->x, item->y);
+                asset_create(item->type, item->x, item->y, item->one_shot);
                 ffree(item, "asset_process_add_queue");
             }
         }
@@ -193,8 +199,6 @@ void asset_destroy(asset_t *asset) {
 
     for (int x = 0; x < TOTAL; x++) { animation_destroy(asset->animations[x]); }
     asset->index = -1;
-
-    //ffree(asset, "asset asset_destroy");
 }
 
 void assets_destroy() {

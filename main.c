@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "shader.h"
 #include "timer.h"
+#include "utils.h"
 
 game_t *game;
 
@@ -24,7 +25,12 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-    asset_add(ORE_GOLD, 0, 0);
+    float fmin = -50.0f;
+    float fmax = 50.0f;
+    for (int z = 0; z < 34000; z++) {
+        asset_add(ORE_GOLD, float_rand(fmin, fmax), float_rand(fmin, fmax),
+                  false);
+    }
 
     while (!game->window->should_close && game->running) {
         timer_start();

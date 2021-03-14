@@ -4,6 +4,7 @@
 
 #include "ore_gold.h"
 #include "../game.h"
+#include "../logger.h"
 #include "common.h"
 
 void ore_gold_init(asset_t *asset) {
@@ -16,13 +17,7 @@ void ore_gold_init(asset_t *asset) {
 
     asset->update = ore_gold_update;
 
-    asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 1, 0.9f);
+    asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 1, 0);
 }
 
-void ore_gold_update(asset_t *asset) {
-    asset_animate(asset);
-
-    if (game->timer->time - game->timer->previous_time > 1.0) {
-        add_bling(asset, 0.5);
-    }
-}
+void ore_gold_update(asset_t *asset) { add_bling(asset, 0.0025); }

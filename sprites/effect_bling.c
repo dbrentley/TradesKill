@@ -14,7 +14,7 @@ void effect_bling_init(asset_t *asset) {
 
     asset->update = effect_bling_update;
 
-    asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 7, 0.95f);
+    asset->animations[IDLE] = animation_create(IDLE, asset->sprite, 4, 0.95f);
 }
 
 void effect_bling_update(asset_t *asset) {
