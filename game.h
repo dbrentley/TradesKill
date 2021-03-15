@@ -35,6 +35,7 @@ typedef struct {
 } game_t;
 
 extern game_t *game;
+extern asset_t *hero;
 extern pthread_mutex_t lock;
 extern bool key_down;
 

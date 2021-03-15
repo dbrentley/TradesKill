@@ -15,8 +15,15 @@
 
 void set_aspect(int width, int height) {
     float aspect = (float) width / (float) height;
+
+    float hx, hy = 0;
+    if (hero != NULL) {
+        hx = hero->position.x;
+        hy = hero->position.y;
+    }
     glViewport(0, 0, width, height);
     gluOrtho2D(0.0f, (float) width, (float) height, 0.0f);
+
     game->window->width = width;
     game->window->height = height;
     game->window->aspect = aspect;
@@ -25,6 +32,7 @@ void set_aspect(int width, int height) {
     mat4x4 m, p;
     mat4x4_identity(m);
     mat4x4_ortho(p, -aspect * zoom, aspect * zoom, -zoom, zoom, 1.0f, -1.0f);
+    mat4x4_translate_in_place(p, -hx, hy, -1);
     mat4x4_mul(game->window->mvp, p, m);
 
     game->window->update_aspect = true;

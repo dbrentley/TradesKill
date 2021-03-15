@@ -81,24 +81,6 @@ void game_init(char *name) {
     game->running = true;
 }
 
-void game_render() {
-    glBindTexture(GL_TEXTURE_2D, game->atlas->texture);
-    glBindVertexArray(game->gle->vao);
-    glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
-
-    for (int x = 0; x < game->assets_count; x++) {
-        if (game->assets[x]->index != -1) {
-            game->assets[x]->update(game->assets[x]);
-        }
-    }
-
-    glBufferSubData(GL_ARRAY_BUFFER, 0, MAX_SPRITES * sizeof(float) * 16,
-                    game->gle->vertex_buffer);
-
-    glDrawElements(GL_TRIANGLES, MAX_SPRITES, GL_UNSIGNED_INT, 0);
-}
-
-
 void game_destroy() {
     state_destroy();
     timer_destroy();

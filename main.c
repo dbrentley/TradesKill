@@ -5,6 +5,7 @@
 #include "utils.h"
 
 game_t *game;
+asset_t *hero;
 
 int main() {
     game_init("TradesKill");
@@ -25,35 +26,41 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-    //    float fmin = -50.0f;
-    //    float fmax = 50.0f;
-    //    for (int z = 0; z < 34000; z++) {
-    //        asset_add(ORE_GOLD, float_rand(fmin, fmax), float_rand(fmin, fmax),
-    //                  false);
-    //    }
+    asset_add(ORE_GOLD, NULL, -2.0f, 0, false);
+    hero = asset_create(HERO, "hero", 0, 0, false);
+    hero->velocity = 5.0f;
 
-    asset_add(ORE_GOLD, -2.0f, 0, false);
-    asset_add(HERO, 0, 0, false);
 
     while (!game->window->should_close && game->running) {
         timer_start();
+
+        glBindTexture(GL_TEXTURE_2D, game->atlas->texture);
+        glBindVertexArray(game->gle->vao);
+        glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         glUseProgram(default_program);
+
         glUniformMatrix4fv(mvp_uniform, 1, GL_FALSE,
                            (const GLfloat *) game->window->mvp);
-        if (game->window->update_aspect) {
-            set_aspect(game->window->width, game->window->height);
-            game->window->update_aspect = false;
-        }
-        game_render();
+        set_aspect(game->window->width, game->window->height);
 
-        // poll for events
-        glfwPollEvents();
+        for (int x = 0; x < game->assets_count; x++) {
+            if (game->assets[x]->index != -1) {
+                game->assets[x]->update(game->assets[x]);
+            }
+        }
+
+        glBufferSubData(GL_ARRAY_BUFFER, 0, MAX_SPRITES * sizeof(float) * 16,
+                        game->gle->vertex_buffer);
+
+        glDrawElements(GL_TRIANGLES, MAX_SPRITES, GL_UNSIGNED_INT, 0);
+
 
         // swap buffers
         glfwSwapBuffers(game->window->gl_window);
-
-        glUseProgram(0);
+        glfwPollEvents();
         timer_end();
     }
 

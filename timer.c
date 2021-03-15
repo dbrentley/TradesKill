@@ -28,8 +28,8 @@ void timer_start() {
 }
 
 void timer_end() {
+    game->timer->end_time = glfwGetTime();
     game->timer->frame_count++;
-    game->timer->end_time = game->timer->time;
     game->timer->delta = game->timer->end_time - game->timer->start_time;
 
     if (game->timer->time - game->timer->previous_time >= 1.0) {

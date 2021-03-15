@@ -8,8 +8,10 @@
 
 #include <stdlib.h>
 
-animation_t *animation_create(animation_type_e type, sprite_t *sprite,
-                              int frame_total, float speed) {
+animation_t *animation_create(animation_type_e type,
+                              animation_direction_e direction, sprite_t *sprite,
+                              int frame_total, int frame_atlas_offset_x_start,
+                              float speed) {
     animation_t *anim = malloc(sizeof(animation_t));
     checkm(anim);
     anim->time = malloc(sizeof(animation_time_t));
@@ -17,10 +19,12 @@ animation_t *animation_create(animation_type_e type, sprite_t *sprite,
 
     anim->type = type;
     anim->current_frame = 0;
-    anim->frame_atlas_offset_x = sprite->atlas_offset.x;
+    anim->frame_atlas_offset_x =
+            sprite->atlas_offset.x + frame_atlas_offset_x_start;
     anim->frame_atlas_offset_y = sprite->atlas_offset.y;
     anim->speed = speed;
     anim->frame_total = frame_total;
+    anim->frame_atlas_offset_x_start = frame_atlas_offset_x_start;
 
     anim->time->delta = 0;
     anim->time->time = 0;

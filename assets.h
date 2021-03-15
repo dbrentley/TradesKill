@@ -13,8 +13,6 @@
 
 typedef struct asset_t asset_t;
 
-typedef enum { INIT, UPDATE, TICK } asset_event_e;
-
 typedef void (*asset_update_f)(asset_t *);
 
 typedef struct {
@@ -23,6 +21,7 @@ typedef struct {
     bool one_shot;
     sprite_type_e type;
     asset_t *asset;
+    char *name;
 } asset_add_queue_entry_t;
 
 typedef struct {
@@ -34,8 +33,12 @@ struct asset_t {
     asset_position_t position;
     bool visible;
     bool one_shot;
+    bool dirty;
+    float scale;
+    float velocity;
     float z;
     int index;
+    char *name;
     sprite_t *sprite;
     asset_update_f update;
     animation_t **animations;
@@ -52,13 +55,14 @@ void asset_init(int n);
 
 void assets_destroy();
 
-asset_t *asset_create(sprite_type_e type, float x, float y, bool one_shot);
+asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
+                      bool one_shot);
 
-void asset_add(sprite_type_e type, float x, float y, bool one_shot);
+void asset_add(sprite_type_e type, char *name, float x, float y, bool one_shot);
 
 void asset_remove(asset_t *asset);
 
-void asset_animation_add(asset_t *asset, animation_t *animation);
+void asset_move(asset_t *asset, animation_direction_e direction);
 
 void asset_animate(asset_t *asset);
 
@@ -67,6 +71,7 @@ void asset_set_active_animation(asset_t *asset, animation_type_e type);
 void asset_destroy(asset_t *asset);
 
 asset_t *asset_get_by_index(int id);
+asset_t *asset_get_by_name(char *name);
 
 void *asset_process_add_queue();
 void *asset_process_rem_queue();
