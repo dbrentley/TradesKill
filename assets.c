@@ -146,23 +146,28 @@ void asset_move(asset_t *asset, asset_facing_e facing) {
     }
 
     int offset = asset->index * 16;
-    float v[2];
+    float v[8];
     // ll
     v[0] = asset->position.x - asset->scale;
     v[1] = asset->position.y - asset->scale;
-    memcpy(game->gle->vertex_buffer + offset + 0, v, 2 * sizeof(float));
     // lr
-    v[0] = asset->position.x + asset->scale;
-    v[1] = asset->position.y - asset->scale;
-    memcpy(game->gle->vertex_buffer + offset + 4, v, 2 * sizeof(float));
+    v[2] = asset->position.x + asset->scale;
+    v[3] = asset->position.y - asset->scale;
     // ur
-    v[0] = asset->position.x + asset->scale;
-    v[1] = asset->position.y + asset->scale;
-    memcpy(game->gle->vertex_buffer + offset + 8, v, 2 * sizeof(float));
+    v[4] = asset->position.x + asset->scale;
+    v[5] = asset->position.y + asset->scale;
     // ul
-    v[0] = asset->position.x - asset->scale;
-    v[1] = asset->position.y + asset->scale;
-    memcpy(game->gle->vertex_buffer + offset + 12, v, 2 * sizeof(float));
+    v[6] = asset->position.x - asset->scale;
+    v[7] = asset->position.y + asset->scale;
+
+    int cnt = 0;
+    for (int y = 0; y <= 12; y += 4) {
+        float m[2];
+        m[0] = v[cnt];
+        m[1] = v[cnt + 1];
+        memcpy(game->gle->vertex_buffer + offset + y, m, 2 * sizeof(float));
+        cnt += 2;
+    }
 }
 
 void asset_animate(asset_t *asset) {
