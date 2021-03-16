@@ -7,17 +7,16 @@
 
 void hero_init(asset_t *asset) {
     asset->sprite = sprite_create(ORE_COPPER);
-    asset->sprite->atlas_offset.x = 0;
-    asset->sprite->atlas_offset.y = 3;
     asset->sprite->size.width = (int) game->atlas->sprite_width;
     asset->sprite->size.height = (int) game->atlas->sprite_height;
 
     asset->update = hero_update;
-
-    asset->animations[IDLE] =
-            animation_create(IDLE, E, asset->sprite, 1, 0, 0.9f);
-    asset->animations[WALK] =
-            animation_create(WALK, E, asset->sprite, 4, 1, 0.90f);
+    asset->animations[IDLE_S] =
+            animation_create(IDLE_S, asset->sprite, 1, 0, 3, 1.0f);
+    asset->animations[WALK_E] =
+            animation_create(WALK_E, asset->sprite, 2, 1, 3, 0.9f);
+    asset->animations[WALK_W] =
+            animation_create(WALK_W, asset->sprite, 2, 1, 4, 0.9f);
 }
 
 void hero_update(asset_t *asset) {
@@ -30,5 +29,16 @@ void hero_update(asset_t *asset) {
         asset_animate(asset);
         asset->animations[asset->state]->time->previous_time = glfwGetTime();
     }
-    if (key_down) { asset_move(hero, E); }
+    if (key_down) {
+        switch (asset->state) {
+            case WALK_W:
+                asset_move(hero, W);
+                break;
+            case WALK_E:
+                asset_move(hero, E);
+                break;
+            default:
+                break;
+        }
+    }
 }

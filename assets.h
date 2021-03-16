@@ -15,6 +15,8 @@ typedef struct asset_t asset_t;
 
 typedef void (*asset_update_f)(asset_t *);
 
+typedef enum { N, E, S, W } asset_facing_e;
+
 typedef struct {
     float x;
     float y;
@@ -62,7 +64,7 @@ void asset_add(sprite_type_e type, char *name, float x, float y, bool one_shot);
 
 void asset_remove(asset_t *asset);
 
-void asset_move(asset_t *asset, animation_direction_e direction);
+void asset_move(asset_t *asset, asset_facing_e facing);
 
 void asset_animate(asset_t *asset);
 

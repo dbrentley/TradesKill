@@ -19,10 +19,17 @@ void keyboard_event(GLFWwindow *gl_window, int key, int scancode, int action,
         game->window->should_close = true;
     }
     if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-        asset_set_active_animation(hero, WALK);
+        hero->state = WALK_E;
+        asset_set_active_animation(hero, WALK_E);
     }
     if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
-        asset_set_active_animation(hero, IDLE);
+        asset_set_active_animation(hero, IDLE_S);
     }
-    if (key == GLFW_KEY_B && action == GLFW_PRESS) {}
+    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+        hero->state = WALK_W;
+        asset_set_active_animation(hero, WALK_W);
+    }
+    if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
+        asset_set_active_animation(hero, IDLE_S);
+    }
 }

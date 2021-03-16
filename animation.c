@@ -8,9 +8,8 @@
 
 #include <stdlib.h>
 
-animation_t *animation_create(animation_type_e type,
-                              animation_direction_e direction, sprite_t *sprite,
-                              int frame_total, int frame_atlas_offset_x_start,
+animation_t *animation_create(animation_type_e type, sprite_t *sprite,
+                              int frame_total, int fao_x, int fao_y,
                               float speed) {
     animation_t *anim = malloc(sizeof(animation_t));
     checkm(anim);
@@ -19,12 +18,10 @@ animation_t *animation_create(animation_type_e type,
 
     anim->type = type;
     anim->current_frame = 0;
-    anim->frame_atlas_offset_x =
-            sprite->atlas_offset.x + frame_atlas_offset_x_start;
-    anim->frame_atlas_offset_y = sprite->atlas_offset.y;
+    anim->fao_x = fao_x;
+    anim->fao_y = fao_y;
     anim->speed = speed;
     anim->frame_total = frame_total;
-    anim->frame_atlas_offset_x_start = frame_atlas_offset_x_start;
 
     anim->time->delta = 0;
     anim->time->time = 0;
@@ -40,27 +37,19 @@ animation_t *animation_create(animation_type_e type,
 
     for (int x = 0; x < frame_total * 8; x += 8) {
         // ll
-        anim->frames[x + 0] =
-                (float) (anim->frame_atlas_offset_x + anim->current_frame) *
-                psw;
-        anim->frames[x + 1] = (float) anim->frame_atlas_offset_y * psh + psh;
+        anim->frames[x + 0] = (float) (anim->fao_x + anim->current_frame) * psw;
+        anim->frames[x + 1] = (float) anim->fao_y * psh + psh;
         // lr
         anim->frames[x + 2] =
-                (float) (anim->frame_atlas_offset_x + anim->current_frame) *
-                        psw +
-                psw;
-        anim->frames[x + 3] = (float) anim->frame_atlas_offset_y * psh + psh;
+                (float) (anim->fao_x + anim->current_frame) * psw + psw;
+        anim->frames[x + 3] = (float) anim->fao_y * psh + psh;
         // ur
         anim->frames[x + 4] =
-                (float) (anim->frame_atlas_offset_x + anim->current_frame) *
-                        psw +
-                psw;
-        anim->frames[x + 5] = (float) anim->frame_atlas_offset_y * psh;
+                (float) (anim->fao_x + anim->current_frame) * psw + psw;
+        anim->frames[x + 5] = (float) anim->fao_y * psh;
         // ul
-        anim->frames[x + 6] =
-                (float) (anim->frame_atlas_offset_x + anim->current_frame) *
-                psw;
-        anim->frames[x + 7] = (float) anim->frame_atlas_offset_y * psh;
+        anim->frames[x + 6] = (float) (anim->fao_x + anim->current_frame) * psw;
+        anim->frames[x + 7] = (float) anim->fao_y * psh;
         anim->current_frame++;
     }
 

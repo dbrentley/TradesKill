@@ -14,7 +14,8 @@ void ore_copper_init(asset_t *asset) {
 
     asset->update = ore_copper_update;
 
-    asset->animations[IDLE] = animation_create(IDLE, N, asset->sprite, 1, 0, 0);
+    asset->animations[IDLE_S] =
+            animation_create(IDLE_S, asset->sprite, 0, 1, 0, 0);
 }
 
 void ore_copper_update(asset_t *asset) { asset_animate(asset); }

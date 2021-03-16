@@ -10,7 +10,13 @@
 typedef struct sprite_t sprite_t;
 
 
-typedef enum { HERO, ORE_COPPER, ORE_GOLD, EFFECT_BLING, TOTAL } sprite_type_e;
+typedef enum {
+    HERO,
+    ORE_COPPER,
+    ORE_GOLD,
+    EFFECT_BLING,
+    SPRITE_TOTAL
+} sprite_type_e;
 
 typedef struct {
     float u;
@@ -26,7 +32,6 @@ struct sprite_t {
     sprite_type_e type;
     sprite_size_t size;
     atlas_position_t atlas_offset;
-    texture_uv_t texture;
 };
 
 sprite_t *sprite_create(sprite_type_e type);

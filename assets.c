@@ -30,10 +30,13 @@ void asset_init(int n) {
     game->assets[n]->scale = 0.5f;
     game->assets[n]->velocity = 1.0f;
     game->assets[n]->z = 0;
-    game->assets[n]->animations = malloc(TOTAL * sizeof(animation_t *));
+    game->assets[n]->animations =
+            malloc(ANIMATION_TYPE_TOTAL * sizeof(animation_t *));
     checkm(game->assets[n]->animations);
     game->assets[n]->name = NULL;
-    for (int y = 0; y < TOTAL; y++) { game->assets[n]->animations[y] = NULL; }
+    for (int y = 0; y < ANIMATION_TYPE_TOTAL; y++) {
+        game->assets[n]->animations[y] = NULL;
+    }
 }
 
 asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
@@ -70,7 +73,7 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
     game->assets[i]->index = i;
     game->assets[i]->visible = true;
     game->assets[i]->one_shot = one_shot;
-    game->assets[i]->state = IDLE;
+    game->assets[i]->state = IDLE_S;
     game->assets[i]->position.x = x;
     game->assets[i]->position.y = y;
 
@@ -79,23 +82,23 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
     // ll
     v[0].position.x = game->assets[i]->position.x - game->assets[i]->scale;
     v[0].position.y = game->assets[i]->position.y - game->assets[i]->scale;
-    v[0].uv.u = game->assets[i]->animations[IDLE]->frames[0];
-    v[0].uv.v = game->assets[i]->animations[IDLE]->frames[1];
+    v[0].uv.u = game->assets[i]->animations[IDLE_S]->frames[0];
+    v[0].uv.v = game->assets[i]->animations[IDLE_S]->frames[1];
     // lr
     v[1].position.x = game->assets[i]->position.x + game->assets[i]->scale;
     v[1].position.y = game->assets[i]->position.y - game->assets[i]->scale;
-    v[1].uv.u = game->assets[i]->animations[IDLE]->frames[2];
-    v[1].uv.v = game->assets[i]->animations[IDLE]->frames[3];
+    v[1].uv.u = game->assets[i]->animations[IDLE_S]->frames[2];
+    v[1].uv.v = game->assets[i]->animations[IDLE_S]->frames[3];
     // ur
     v[2].position.x = game->assets[i]->position.x + game->assets[i]->scale;
     v[2].position.y = game->assets[i]->position.y + game->assets[i]->scale;
-    v[2].uv.u = game->assets[i]->animations[IDLE]->frames[4];
-    v[2].uv.v = game->assets[i]->animations[IDLE]->frames[5];
+    v[2].uv.u = game->assets[i]->animations[IDLE_S]->frames[4];
+    v[2].uv.v = game->assets[i]->animations[IDLE_S]->frames[5];
     // ul
     v[3].position.x = game->assets[i]->position.x - game->assets[i]->scale;
     v[3].position.y = game->assets[i]->position.y + game->assets[i]->scale;
-    v[3].uv.u = game->assets[i]->animations[IDLE]->frames[6];
-    v[3].uv.v = game->assets[i]->animations[IDLE]->frames[7];
+    v[3].uv.u = game->assets[i]->animations[IDLE_S]->frames[6];
+    v[3].uv.v = game->assets[i]->animations[IDLE_S]->frames[7];
 
     int offset = i * 16;
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
@@ -123,9 +126,9 @@ void asset_remove(asset_t *asset) {
     queue_append(&game->queues.asset_remove, asset);
 }
 
-void asset_move(asset_t *asset, animation_direction_e direction) {
+void asset_move(asset_t *asset, asset_facing_e facing) {
     float delta = (float) (asset->velocity * game->timer->delta);
-    switch (direction) {
+    switch (facing) {
         case N:
             asset->position.y -= delta;
             break;
@@ -244,7 +247,9 @@ void asset_destroy(asset_t *asset) {
     int offset = asset->index * 16;
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
 
-    for (int x = 0; x < TOTAL; x++) { animation_destroy(asset->animations[x]); }
+    for (int x = 0; x < SPRITE_TOTAL; x++) {
+        animation_destroy(asset->animations[x]);
+    }
     asset->name = NULL;
     asset->index = -1;
 }
