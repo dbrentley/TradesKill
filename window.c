@@ -87,7 +87,7 @@ void window_init(char *title) {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-    //glfwWindowHint(GLFW_SAMPLES, 4); // anti-alias
+    //glfwWindowHint(GLFW_SAMPLES, 4);// anti-alias
 
     game->window->gl_window = glfwCreateWindow(
             game->window->width, game->window->height, title, NULL, NULL);

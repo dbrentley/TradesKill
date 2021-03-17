@@ -78,6 +78,8 @@ void game_init(char *name) {
                           (void *) (2 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    for (int x = 0; x < 348; x++) { game->keys[x] = 0; }
+
     game->running = true;
 }
 

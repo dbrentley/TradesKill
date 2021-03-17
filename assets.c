@@ -128,6 +128,7 @@ void asset_remove(asset_t *asset) {
 
 void asset_move(asset_t *asset, asset_facing_e facing) {
     float delta = (float) (asset->velocity * game->timer->delta);
+
     switch (facing) {
         case N:
             asset->position.y -= delta;
@@ -201,7 +202,7 @@ void asset_animate(asset_t *asset) {
 
 void asset_set_active_animation(asset_t *asset, animation_type_e type) {
     asset->state = type;
-    asset->animations[type]->current_frame = 0;
+    //asset->animations[type]->current_frame = 0;
 }
 
 asset_t *asset_get_by_index(int id) {

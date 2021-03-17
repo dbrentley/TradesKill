@@ -27,9 +27,10 @@ typedef struct {
     game_timer_t *timer;
     game_gle_t *gle;
     atlas_t *atlas;
+    int keys[348];
     int assets_count;
-    asset_t **assets;
     bool running;
+    asset_t **assets;
     queues_t queues;
     mtwist *mt;
 } game_t;

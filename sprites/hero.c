@@ -29,16 +29,17 @@ void hero_update(asset_t *asset) {
         asset_animate(asset);
         asset->animations[asset->state]->time->previous_time = glfwGetTime();
     }
+
     if (key_down) {
-        switch (asset->state) {
-            case WALK_W:
-                asset_move(hero, W);
-                break;
-            case WALK_E:
-                asset_move(hero, E);
-                break;
-            default:
-                break;
+        if (game->keys[GLFW_KEY_A]) {
+            asset_set_active_animation(asset, WALK_W);
+            asset_move(asset, W);
         }
+        if (game->keys[GLFW_KEY_D]) {
+            asset_set_active_animation(asset, WALK_E);
+            asset_move(asset, E);
+        }
+    } else {
+        asset_set_active_animation(asset, IDLE_S);
     }
 }
