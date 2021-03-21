@@ -4,11 +4,9 @@
 
 #include "mouse.h"
 #include "game.h"
-#include "globals.h"
 #include "utils.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 
@@ -58,4 +56,6 @@ void mouse_button_callback(GLFWwindow *gl_window, int button, int action,
                            int mods) {
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {}
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {}
+    printf("Mouse x: %f, y: %f\n", game->window->mouse_x,
+           game->window->mouse_y);
 }

@@ -18,10 +18,10 @@ animation_t *animation_create(animation_type_e type, sprite_t *sprite,
 
     anim->type = type;
     anim->current_frame = 0;
+    anim->frame_total = frame_total;
     anim->fao_x = fao_x;
     anim->fao_y = fao_y;
     anim->speed = speed;
-    anim->frame_total = frame_total;
 
     anim->time->delta = 0;
     anim->time->time = 0;

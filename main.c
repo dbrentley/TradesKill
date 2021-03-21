@@ -1,7 +1,5 @@
 #include "game.h"
-#include "globals.h"
 #include "shader.h"
-#include "timer.h"
 
 game_t *game;
 asset_t *hero;

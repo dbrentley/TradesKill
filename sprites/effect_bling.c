@@ -15,7 +15,7 @@ void effect_bling_init(asset_t *asset) {
     asset->update = effect_bling_update;
 
     asset->animations[NONE] =
-            animation_create(NONE, asset->sprite, 4, 0, 2, 0.95f);
+            animation_create(NONE, asset->sprite, 5, 0, 2, 0.93f);
 }
 
 void effect_bling_update(asset_t *asset) {

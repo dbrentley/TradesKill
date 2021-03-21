@@ -21,5 +21,5 @@ void ore_gold_init(asset_t *asset) {
 
 void ore_gold_update(asset_t *asset) {
     asset_animate(asset);
-    add_bling(asset, 0.0025);
+    add_bling(asset, 0.0075);
 }

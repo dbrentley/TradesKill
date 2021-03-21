@@ -6,16 +6,19 @@
 #include "game.h"
 #include "keyboard.h"
 #include "mouse.h"
-#include "state.h"
 #include "stdio.h"
 #include "utils.h"
 
 #include <stdlib.h>
 
+#define MAX(a, b) (((a) < (b)) ? (b) : (a))
+#define MIN(a, b) (((b) < (a)) ? (b) : (a))
+
 void set_aspect(int width, int height) {
     float aspect = (float) width / (float) height;
 
-    float hx, hy = 0;
+    float hx = 0;
+    float hy = 0;
     if (hero != NULL) {
         hx = hero->position.x;
         hy = hero->position.y;
@@ -54,6 +57,61 @@ void resize_callback(GLFWwindow *gl_window, int width, int height) {
     set_aspect(width, height);
 }
 
+GLFWmonitor *get_best_monitor(GLFWwindow *window) {
+    int monitorCount;
+    GLFWmonitor **monitors = glfwGetMonitors(&monitorCount);
+
+    if (!monitors) return NULL;
+
+    int windowX, windowY, windowWidth, windowHeight;
+    glfwGetWindowSize(window, &windowWidth, &windowHeight);
+    glfwGetWindowPos(window, &windowX, &windowY);
+
+    GLFWmonitor *bestMonitor = NULL;
+    int bestArea = 0;
+
+    for (int i = 0; i < monitorCount; ++i) {
+        GLFWmonitor *monitor = monitors[i];
+
+        int monitorX, monitorY;
+        glfwGetMonitorPos(monitor, &monitorX, &monitorY);
+
+        const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+        if (!mode) continue;
+
+        int areaMinX = MAX(windowX, monitorX);
+        int areaMinY = MAX(windowY, monitorY);
+
+        int areaMaxX = MIN(windowX + windowWidth, monitorX + mode->width);
+        int areaMaxY = MIN(windowY + windowHeight, monitorY + mode->height);
+
+        int area = (areaMaxX - areaMinX) * (areaMaxY - areaMinY);
+
+        if (area > bestArea) {
+            bestArea = area;
+            bestMonitor = monitor;
+        }
+    }
+
+    return bestMonitor;
+}
+
+void center_window(GLFWwindow *window, GLFWmonitor *monitor) {
+    if (!monitor) return;
+
+    const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+    if (!mode) return;
+
+    int monitorX, monitorY;
+    glfwGetMonitorPos(monitor, &monitorX, &monitorY);
+
+    int windowWidth, windowHeight;
+    glfwGetWindowSize(window, &windowWidth, &windowHeight);
+
+    glfwSetWindowPos(window, monitorX + (mode->width - windowWidth) / 2,
+                     monitorY + (mode->height - windowHeight) / 2);
+}
+
 void window_init(char *title) {
     if (!glfwInit()) {
         printf("Could not initialize GLFW\n");
@@ -68,7 +126,7 @@ void window_init(char *title) {
 
     game->window->width = DEFAULT_WIDTH;
     game->window->height = DEFAULT_HEIGHT;
-    game->window->zoom = 5.0f;
+    game->window->zoom = 11.0f;
     game->window->should_close = false;
     game->window->should_resize = false;
     game->window->update_aspect = false;
@@ -89,6 +147,9 @@ void window_init(char *title) {
         printf("Could not create window\n");
         exit(-1);
     }
+
+    center_window(game->window->gl_window,
+                  get_best_monitor(game->window->gl_window));
 
     // keyboard
     glfwSetKeyCallback(game->window->gl_window, keyboard_event);

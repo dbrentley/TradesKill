@@ -19,14 +19,14 @@ void hero_init(asset_t *asset) {
             animation_create(IDLE_S, asset->sprite, 1, 0, 4, 1.0f);
     asset->animations[WALK_S] =
             animation_create(WALK_S, asset->sprite, 2, 1, 4, 0.9f);
-    asset->animations[IDLE_W] =
-            animation_create(IDLE_W, asset->sprite, 1, 0, 5, 1.0f);
-    asset->animations[WALK_W] =
-            animation_create(WALK_W, asset->sprite, 2, 1, 5, 0.9f);
     asset->animations[IDLE_N] =
-            animation_create(IDLE_N, asset->sprite, 1, 0, 6, 1.0f);
+            animation_create(IDLE_N, asset->sprite, 1, 0, 5, 1.0f);
     asset->animations[WALK_N] =
-            animation_create(WALK_N, asset->sprite, 2, 1, 6, 0.9f);
+            animation_create(WALK_N, asset->sprite, 2, 1, 5, 0.9f);
+    asset->animations[IDLE_W] =
+            animation_create(IDLE_W, asset->sprite, 1, 0, 6, 1.0f);
+    asset->animations[WALK_W] =
+            animation_create(WALK_W, asset->sprite, 2, 1, 6, 0.9f);
 }
 
 void hero_update(asset_t *asset) {
