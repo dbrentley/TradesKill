@@ -45,22 +45,18 @@ void hero_update(asset_t *asset) {
         // movement
         switch (game->last_key) {
             case GLFW_KEY_A:
-                game->keys[GLFW_KEY_D] = 0;
                 asset_set_active_animation(asset, WALK_W);
                 asset_move(asset, W);
                 break;
             case GLFW_KEY_S:
-                game->keys[GLFW_KEY_W] = 0;
                 asset_set_active_animation(asset, WALK_S);
                 asset_move(asset, S);
                 break;
             case GLFW_KEY_W:
-                game->keys[GLFW_KEY_S] = 0;
                 asset_set_active_animation(asset, WALK_N);
                 asset_move(asset, N);
                 break;
             case GLFW_KEY_D:
-                game->keys[GLFW_KEY_A] = 0;
                 asset_set_active_animation(asset, WALK_E);
                 asset_move(asset, E);
                 break;
