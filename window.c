@@ -32,7 +32,7 @@ void set_aspect(int width, int height) {
     mat4x4 m, p;
     mat4x4_identity(m);
     mat4x4_ortho(p, -aspect * zoom, aspect * zoom, -zoom, zoom, 1.0f, -1.0f);
-    mat4x4_translate_in_place(p, -hx, hy, -1);
+    mat4x4_translate_in_place(p, -hx, -hy, -1);
     mat4x4_mul(game->window->mvp, p, m);
 
     game->window->update_aspect = true;

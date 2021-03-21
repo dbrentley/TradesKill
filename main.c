@@ -2,7 +2,6 @@
 #include "globals.h"
 #include "shader.h"
 #include "timer.h"
-#include "utils.h"
 
 game_t *game;
 asset_t *hero;
@@ -26,8 +25,8 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-    asset_add(ORE_GOLD, NULL, -2.0f, 0, false);
-    hero = asset_create(HERO, "hero", 0, 0, false);
+    asset_add(ORE_GOLD, NULL, -2.0f, 0, NONE, false);
+    hero = asset_create(HERO, "hero", 0, 0, IDLE_E, false);
     hero->velocity = 5.0f;
 
 

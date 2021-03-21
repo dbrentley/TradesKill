@@ -29,6 +29,7 @@ typedef enum {
     DODGE_S,
     DODGE_W,
     DEATH,
+    NONE,
     ANIMATION_TYPE_TOTAL
 } animation_type_e;
 

@@ -28,6 +28,7 @@ typedef struct {
     game_gle_t *gle;
     atlas_t *atlas;
     int keys[348];
+    int last_key;
     int assets_count;
     bool running;
     asset_t **assets;

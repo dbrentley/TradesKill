@@ -40,7 +40,7 @@ void asset_init(int n) {
 }
 
 asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
-                      bool one_shot) {
+                      animation_type_e default_animation, bool one_shot) {
     int i;
     for (i = 0; i < game->assets_count; i++) {
         if (game->assets[i]->index == -1) { break; }
@@ -67,48 +67,47 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
         game->assets[i]->name =
                 calloc(strlen(name) + 1, strlen(name) * sizeof(char) + 1);
         checkm(game->assets[i]->name);
-        strcpy(game->assets[i]->name, name);
+        strncpy(game->assets[i]->name, name, strlen(name));
     }
 
     game->assets[i]->index = i;
     game->assets[i]->visible = true;
     game->assets[i]->one_shot = one_shot;
-    game->assets[i]->state = IDLE_S;
     game->assets[i]->position.x = x;
     game->assets[i]->position.y = y;
+    game->assets[i]->state = default_animation;
 
     vertex_t v[4];
 
     // ll
     v[0].position.x = game->assets[i]->position.x - game->assets[i]->scale;
     v[0].position.y = game->assets[i]->position.y - game->assets[i]->scale;
-    v[0].uv.u = game->assets[i]->animations[IDLE_S]->frames[0];
-    v[0].uv.v = game->assets[i]->animations[IDLE_S]->frames[1];
+    v[0].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[0];
+    v[0].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[1];
     // lr
     v[1].position.x = game->assets[i]->position.x + game->assets[i]->scale;
     v[1].position.y = game->assets[i]->position.y - game->assets[i]->scale;
-    v[1].uv.u = game->assets[i]->animations[IDLE_S]->frames[2];
-    v[1].uv.v = game->assets[i]->animations[IDLE_S]->frames[3];
+    v[1].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[2];
+    v[1].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[3];
     // ur
     v[2].position.x = game->assets[i]->position.x + game->assets[i]->scale;
     v[2].position.y = game->assets[i]->position.y + game->assets[i]->scale;
-    v[2].uv.u = game->assets[i]->animations[IDLE_S]->frames[4];
-    v[2].uv.v = game->assets[i]->animations[IDLE_S]->frames[5];
+    v[2].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[4];
+    v[2].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[5];
     // ul
     v[3].position.x = game->assets[i]->position.x - game->assets[i]->scale;
     v[3].position.y = game->assets[i]->position.y + game->assets[i]->scale;
-    v[3].uv.u = game->assets[i]->animations[IDLE_S]->frames[6];
-    v[3].uv.v = game->assets[i]->animations[IDLE_S]->frames[7];
+    v[3].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[6];
+    v[3].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[7];
 
     int offset = i * 16;
     memcpy(game->gle->vertex_buffer + offset, v, 16 * sizeof(float));
-
 
     return game->assets[i];
 }
 
 void asset_add(sprite_type_e type, char *name, float x, float y,
-               bool one_shot) {
+               animation_type_e default_animation, bool one_shot) {
     int add_size = queue_size(&game->queues.asset_add);
     int rem_size = queue_size(&game->queues.asset_remove);
     if ((add_size - rem_size) >= MAX_SPRITES) { return; }
@@ -119,6 +118,7 @@ void asset_add(sprite_type_e type, char *name, float x, float y,
     item->y = y;
     item->one_shot = one_shot;
     item->name = name;
+    item->default_animation = default_animation;
     queue_append(&game->queues.asset_add, item);
 }
 
@@ -131,13 +131,13 @@ void asset_move(asset_t *asset, asset_facing_e facing) {
 
     switch (facing) {
         case N:
-            asset->position.y -= delta;
+            asset->position.y += delta;
             break;
         case E:
             asset->position.x += delta;
             break;
         case S:
-            asset->position.y += delta;
+            asset->position.y -= delta;
             break;
         case W:
             asset->position.x -= delta;
@@ -227,7 +227,7 @@ void *asset_process_add_queue() {
             asset_add_queue_entry_t *item = queue_pop(&game->queues.asset_add);
             if (item != NULL) {
                 asset_create(item->type, item->name, item->x, item->y,
-                             item->one_shot);
+                             item->default_animation, item->one_shot);
                 ffree(item, "asset_process_add_queue");
             }
         }

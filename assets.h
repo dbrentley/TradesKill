@@ -22,6 +22,7 @@ typedef struct {
     float y;
     bool one_shot;
     sprite_type_e type;
+    animation_type_e default_animation;
     asset_t *asset;
     char *name;
 } asset_add_queue_entry_t;
@@ -33,6 +34,7 @@ typedef struct {
 
 struct asset_t {
     asset_position_t position;
+    asset_facing_e facing;
     bool visible;
     bool one_shot;
     bool dirty;
@@ -58,9 +60,10 @@ void asset_init(int n);
 void assets_destroy();
 
 asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
-                      bool one_shot);
+                      animation_type_e default_animation, bool one_shot);
 
-void asset_add(sprite_type_e type, char *name, float x, float y, bool one_shot);
+void asset_add(sprite_type_e type, char *name, float x, float y,
+               animation_type_e default_animation, bool one_shot);
 
 void asset_remove(asset_t *asset);
 
