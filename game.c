@@ -4,7 +4,6 @@
 
 #include "game.h"
 #include "assets.h"
-#include "logger.h"
 #include "utils.h"
 
 #include <pthread.h>
@@ -17,7 +16,7 @@ pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 void game_init(char *name) {
     game = malloc(sizeof(game_t));
     if (game == NULL) {
-        logline(ERROR, "Could not initialize game");
+        printf("Could not initialize game\n");
         exit(-1);
     }
 

@@ -4,8 +4,6 @@
 
 #include "assets.h"
 #include "game.h"
-#include "logger.h"
-#include "queue.h"
 #include "sprites/effect_bling.h"
 #include "sprites/hero.h"
 #include "sprites/ore_copper.h"
@@ -106,26 +104,6 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
     return game->assets[i];
 }
 
-void asset_add(sprite_type_e type, char *name, float x, float y,
-               animation_type_e default_animation, bool one_shot) {
-    int add_size = queue_size(&game->queues.asset_add);
-    int rem_size = queue_size(&game->queues.asset_remove);
-    if ((add_size - rem_size) >= MAX_SPRITES) { return; }
-
-    asset_add_queue_entry_t *item = malloc(sizeof(asset_add_queue_entry_t));
-    item->type = type;
-    item->x = x;
-    item->y = y;
-    item->one_shot = one_shot;
-    item->name = name;
-    item->default_animation = default_animation;
-    queue_append(&game->queues.asset_add, item);
-}
-
-void asset_remove(asset_t *asset) {
-    queue_append(&game->queues.asset_remove, asset);
-}
-
 void asset_move(asset_t *asset, asset_facing_e facing) {
     float delta = (float) (asset->velocity * game->timer->delta);
 
@@ -195,14 +173,13 @@ void asset_animate(asset_t *asset) {
         if (asset->animations[asset->state]->current_frame ==
             asset->animations[asset->state]->frame_total) {
             asset->animations[asset->state]->current_frame = 0;
-            if (asset->one_shot) { asset_remove(asset); }
+            if (asset->one_shot) { asset_destroy(asset); }
         }
     }
 }
 
 void asset_set_active_animation(asset_t *asset, animation_type_e type) {
     asset->state = type;
-    //asset->animations[type]->current_frame = 0;
 }
 
 asset_t *asset_get_by_index(int id) {
@@ -216,30 +193,6 @@ asset_t *asset_get_by_name(char *name) {
     for (int x = 0; x < game->assets_count; x++) {
         if (strcmp(game->assets[x]->name, name) == 0) {
             return game->assets[x];
-        }
-    }
-    return NULL;
-}
-
-void *asset_process_add_queue() {
-    while (!game->window->should_close && game->running) {
-        for (int x = 0; x < queue_size(&game->queues.asset_add); x++) {
-            asset_add_queue_entry_t *item = queue_pop(&game->queues.asset_add);
-            if (item != NULL) {
-                asset_create(item->type, item->name, item->x, item->y,
-                             item->default_animation, item->one_shot);
-                ffree(item, "asset_process_add_queue");
-            }
-        }
-    }
-    return NULL;
-}
-
-void *asset_process_rem_queue() {
-    while (!game->window->should_close && game->running) {
-        for (int x = 0; x < queue_size(&game->queues.asset_remove); x++) {
-            asset_t *item = queue_pop(&game->queues.asset_remove);
-            if (item != NULL) { asset_destroy(item); }
         }
     }
     return NULL;

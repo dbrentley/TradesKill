@@ -3,9 +3,9 @@
 //
 
 #include "shader.h"
-#include "logger.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 char *file_to_buffer(char *file) {
     FILE *f;
@@ -14,7 +14,7 @@ char *file_to_buffer(char *file) {
 
     f = fopen(file, "r");
     if (f == NULL) {
-        logline(ERROR, "Failed to open file %s", file);
+        printf("Failed to open file %s\n", file);
         return NULL;
     }
 
@@ -24,14 +24,14 @@ char *file_to_buffer(char *file) {
 
     buffer = calloc(size, sizeof(char));
     if (buffer == NULL) {
-        logline(ERROR, "Could not create file buffer.");
+        printf("Could not create file buffer.\n");
         return NULL;
     }
 
     fread(buffer, sizeof(char), size, f);
     fclose(f);
 
-    logline(INFO, "Successfully read file %s", file);
+    printf("Successfully read file %s\n", file);
     return buffer;
 }
 
@@ -50,7 +50,7 @@ GLuint shader_create(GLenum type, char *file) {
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &max_length);
         info_log = (char *) malloc(max_length);
         glGetShaderInfoLog(shader, max_length, &max_length, info_log);
-        logline(ERROR, "%s", info_log);
+        printf("%s\n", info_log);
         free(info_log);
         exit(-1);
     }

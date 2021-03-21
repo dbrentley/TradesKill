@@ -62,11 +62,6 @@ void assets_destroy();
 asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
                       animation_type_e default_animation, bool one_shot);
 
-void asset_add(sprite_type_e type, char *name, float x, float y,
-               animation_type_e default_animation, bool one_shot);
-
-void asset_remove(asset_t *asset);
-
 void asset_move(asset_t *asset, asset_facing_e facing);
 
 void asset_animate(asset_t *asset);

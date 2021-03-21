@@ -3,9 +3,10 @@
 //
 
 #include "utils.h"
-#include "logger.h"
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 void ffree(void *obj, char *v) {
     if (obj != NULL) {
@@ -16,7 +17,7 @@ void ffree(void *obj, char *v) {
 
 void checkm(void *obj) {
     if (obj == NULL) {
-        logline(ERROR, "Could not allocate memory for object");
+        printf("Could not allocate memory for object\n");
         exit(-1);
     }
 }

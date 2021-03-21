@@ -5,11 +5,8 @@
 #include "keyboard.h"
 #include "assets.h"
 #include "game.h"
-#include "globals.h"
-#include "state.h"
-#include "utils.h"
 
-bool key_down;
+#include <stdio.h>
 
 void keyboard_event(GLFWwindow *gl_window, int key, int scancode, int action,
                     int mods) {
@@ -19,9 +16,6 @@ void keyboard_event(GLFWwindow *gl_window, int key, int scancode, int action,
         game->last_key = key;
     }
     if (action == GLFW_RELEASE) { game->keys[key] = 0; }
-
-    //    if (action == GLFW_PRESS) { key_down = true; }
-    //    if (action == GLFW_RELEASE) { key_down = false; }
 
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         game->window->should_close = true;

@@ -5,7 +5,6 @@
 #include "window.h"
 #include "game.h"
 #include "keyboard.h"
-#include "logger.h"
 #include "mouse.h"
 #include "state.h"
 #include "stdio.h"
@@ -43,7 +42,7 @@ void window_close_callback(GLFWwindow *gl_window) {
 }
 
 void error_callback(int error, const char *description) {
-    logline(ERROR, "Error: %s", description);
+    printf("Error: %s\n", description);
 }
 
 void resize_callback(GLFWwindow *gl_window, int width, int height) {
@@ -57,21 +56,15 @@ void resize_callback(GLFWwindow *gl_window, int width, int height) {
 
 void window_init(char *title) {
     if (!glfwInit()) {
-        logline(ERROR, "Could not initialize GLFW");
+        printf("Could not initialize GLFW\n");
         exit(-1);
     }
 
     game->window = malloc(sizeof(window_t));
-    if (game->window == NULL) {
-        logline(ERROR, "Could not allocate memory for window");
-        exit(-1);
-    }
+    checkm(game->window);
 
     game->window->gl_window = malloc(sizeof(GLFWwindow *));
-    if (game->window->gl_window == NULL) {
-        logline(ERROR, "Could not allocate memory for GL window");
-        exit(-1);
-    }
+    checkm(game->window->gl_window);
 
     game->window->width = DEFAULT_WIDTH;
     game->window->height = DEFAULT_HEIGHT;
@@ -93,7 +86,7 @@ void window_init(char *title) {
             game->window->width, game->window->height, title, NULL, NULL);
     if (!game->window->gl_window) {
         glfwTerminate();
-        logline(ERROR, "Could not create window");
+        printf("Could not create window\n");
         exit(-1);
     }
 
@@ -117,8 +110,8 @@ void window_init(char *title) {
 
     const GLubyte *renderer = glGetString(GL_RENDERER);// get render string
     const GLubyte *version = glGetString(GL_VERSION);  // version as a string
-    logline(INFO, "Renderer: %s", renderer);
-    logline(INFO, "OpenGL version supported %s", version);
+    printf("Renderer: %s\n", renderer);
+    printf("OpenGL version supported %s\n", version);
 
     // disable depth testing
     glDisable(GL_DEPTH_TEST);

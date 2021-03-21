@@ -8,13 +8,6 @@ asset_t *hero;
 
 int main() {
     game_init("TradesKill");
-    pthread_t queue_processing_add_thread;
-    pthread_create(&queue_processing_add_thread, NULL, asset_process_add_queue,
-                   NULL);
-
-    pthread_t queue_processing_rem_thread;
-    pthread_create(&queue_processing_rem_thread, NULL, asset_process_rem_queue,
-                   NULL);
 
     GLuint default_program =
             shader_program_create("assets/shaders/default.v.shader",
@@ -25,7 +18,7 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-    asset_add(ORE_GOLD, NULL, -2.0f, 0, NONE, false);
+    asset_create(ORE_GOLD, NULL, -2.0f, 0, NONE, false);
     hero = asset_create(HERO, "hero", 0, 0, IDLE_E, false);
     hero->velocity = 5.0f;
 
@@ -63,9 +56,6 @@ int main() {
         timer_end();
     }
 
-    pthread_join(queue_processing_add_thread, NULL);
-    pthread_join(queue_processing_rem_thread, NULL);
     game_destroy();
-
     return 0;
 }

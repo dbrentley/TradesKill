@@ -4,15 +4,14 @@
 
 #include "atlas.h"
 #include "game.h"
-#include "logger.h"
+#include "stb_image.h"
 
-#include <stb/stb_image.h>
 #include <stdlib.h>
 
 void atlas_init(char *filename, float sprite_width, float sprite_height) {
     game->atlas = malloc(sizeof(atlas_t));
     if (game->atlas == NULL) {
-        logline(ERROR, "Could not allocate memory for atlas");
+        printf("Could not allocate memory for atlas\n");
         exit(-1);
     }
 
@@ -31,10 +30,10 @@ void atlas_init(char *filename, float sprite_width, float sprite_height) {
             stbi_load(filename, &game->atlas->width, &game->atlas->height,
                       &game->atlas->channels, STBI_rgb_alpha);
     if (!data) {
-        logline(ERROR, "Failed to load atlas texture");
+        printf("Failed to load atlas texture\n");
         exit(-1);
     }
-    logline(INFO, "Successfully loaded atlas %s", filename);
+    printf("Successfully loaded atlas %s\n", filename);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, game->atlas->width,
                  game->atlas->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     stbi_image_free(data);

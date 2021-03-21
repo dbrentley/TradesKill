@@ -4,10 +4,10 @@
 
 #include "timer.h"
 #include "game.h"
-#include "globals.h"
-#include "logger.h"
 #include "stdlib.h"
 #include "utils.h"
+
+#include <stdio.h>
 
 void timer_init() {
     game->timer = malloc(sizeof(game_timer_t));
@@ -37,9 +37,7 @@ void timer_end() {
         game->timer->frame_count = 0;
         game->timer->previous_time = game->timer->time;
 #ifdef DEBUG_ON
-        logline(DEBUG, "FPS: %i, add: %d, rem: %d", game->timer->fps,
-                queue_size(&game->queues.asset_add),
-                queue_size(&game->queues.asset_remove));
+        printf("FPS: %i\n", game->timer->fps);
 #endif
     }
 }
