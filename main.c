@@ -16,9 +16,13 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-    asset_create(ORE_GOLD, NULL, -2.0f, 0, NONE, false);
-    hero = asset_create(HERO, "hero", 0, 0, IDLE_E, false);
-    hero->velocity = 5.0f;
+    hero = asset_create(HERO, "hero", 0, 0, 9, IDLE_E, false);
+    hero->speed = 5.0f;
+    asset_create(ORE_GOLD, NULL, -2.0f, 0, 0, NONE, false);
+    asset_create(ORE_GOLD, NULL, -6.0f, 0, 4, NONE, false);
+    asset_create(ORE_GOLD, NULL, -5.0f, 0, 3, NONE, false);
+    asset_create(ORE_GOLD, NULL, -3.0f, 0, 1, NONE, false);
+    asset_create(ORE_GOLD, NULL, -4.0f, 0, 2, NONE, false);
 
 
     while (!game->window->should_close && game->running) {
@@ -36,19 +40,20 @@ int main() {
                            (const GLfloat *) game->window->mvp);
         set_aspect(game->window->width, game->window->height);
 
-        for (int x = 0; x < game->assets_count; x++) {
+        // update assets
+        for (int x = 0; x < MAX_SPRITES; x++) {
             if (game->assets[x]->index != -1) {
                 game->assets[x]->update(game->assets[x]);
             }
         }
 
-        glBufferSubData(GL_ARRAY_BUFFER, 0, MAX_SPRITES * sizeof(float) * 16,
+        // render
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+                        game->assets_total * sizeof(float) * VERTEX_ELEMENTS,
                         game->gle->vertex_buffer);
-
         glDrawElements(GL_TRIANGLES, MAX_SPRITES, GL_UNSIGNED_INT, 0);
 
 
-        // swap buffers
         glfwSwapBuffers(game->window->gl_window);
         glfwPollEvents();
         timer_end();

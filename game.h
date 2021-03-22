@@ -29,7 +29,9 @@ typedef struct {
     atlas_t *atlas;
     int keys[348];
     int last_key;
+    int assets_total;
     int assets_count;
+    int *asset_index;
     bool running;
     asset_t **assets;
     queues_t queues;

@@ -3,7 +3,6 @@
 //
 
 #include "game.h"
-#include "assets.h"
 #include "utils.h"
 
 #include <pthread.h>
@@ -36,14 +35,18 @@ void game_init(char *name) {
     game->gle = malloc(sizeof(game_gle_t));
     checkm(game->gle);
 
-    game->gle->vertex_buffer = malloc(MAX_SPRITES * sizeof(float) * 16);
+    game->gle->vertex_buffer =
+            malloc(MAX_SPRITES * sizeof(float) * VERTEX_ELEMENTS);
     checkm(game->gle->vertex_buffer);
 
     game->gle->element_buffer = malloc(MAX_SPRITES * sizeof(uint32_t) * 6);
     checkm(game->gle->element_buffer);
 
+    game->asset_index = malloc(MAX_SPRITES * sizeof(int));
+    checkm(game->asset_index);
+
     assets_init();
-    game->assets_count = MAX_SPRITES;
+    game->assets_total = MAX_SPRITES;
 
     // vao
     glGenVertexArrays(1, &game->gle->vao);
@@ -52,8 +55,8 @@ void game_init(char *name) {
     // vbo
     glGenBuffers(1, &game->gle->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
-    glBufferData(GL_ARRAY_BUFFER, MAX_SPRITES * sizeof(float) * 16, NULL,
-                 GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, MAX_SPRITES * sizeof(float) * VERTEX_ELEMENTS,
+                 NULL, GL_DYNAMIC_DRAW);
     // ebo
     int p = 0;
     for (int e = 0; e < MAX_SPRITES - 6; e += 6) {
@@ -70,15 +73,18 @@ void game_init(char *name) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_SPRITES * sizeof(uint32_t),
                  game->gle->element_buffer, GL_STATIC_DRAW);
     // position attribute pointer
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          VERTEX_STRIDE * sizeof(float), 0);
     glEnableVertexAttribArray(0);
     // uv attribute pointer
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                          (void *) (2 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+                          VERTEX_STRIDE * sizeof(float),
+                          (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     for (int x = 0; x < 348; x++) { game->keys[x] = 0; }
 
+    game->assets_count = 0;
     game->running = true;
 }
 
@@ -89,6 +95,6 @@ void game_destroy() {
     assets_destroy();
     atlas_destroy();
 
-    ffree(game->gle, "109 game.c");
-    ffree(game, "110 game.c");
+    ffree(game->gle, "gle game_destroy");
+    ffree(game, "game_destroy");
 }
