@@ -4,8 +4,8 @@
 
 #include "utils.h"
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void ffree(void *obj, char *v) {

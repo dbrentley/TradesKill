@@ -15,6 +15,6 @@ void add_bling(asset_t *asset, double frequency) {
     float max_offset = 0.35f;
     asset_create(EFFECT_BLING, NULL,
                  asset->position.x + float_rand(min_offset, max_offset),
-                 asset->position.y + float_rand(min_offset, max_offset), 0.5f,
-                 NONE, true);
+                 asset->position.y + float_rand(min_offset, max_offset),
+                 asset->z_index + 1, NONE, true);
 }

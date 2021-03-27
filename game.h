@@ -33,6 +33,7 @@ typedef struct {
     int assets_count;
     int *asset_index;
     bool running;
+    float *asset_array;
     asset_t **assets;
     queues_t queues;
     mtwist *mt;

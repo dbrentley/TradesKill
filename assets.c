@@ -37,7 +37,7 @@ void asset_init(int n) {
 }
 
 asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
-                      float z, animation_type_e default_animation,
+                      int z, animation_type_e default_animation,
                       bool one_shot) {
     int i;
     for (i = 0; i < game->assets_total; i++) {
@@ -73,7 +73,8 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
     game->assets[i]->one_shot = one_shot;
     game->assets[i]->position.x = x;
     game->assets[i]->position.y = y;
-    game->assets[i]->position.z = 0.0f;
+    game->assets[i]->position.z = 1.0f;
+    game->assets[i]->z_index = z;
     game->assets[i]->state = default_animation;
 
     vertex_t v[4];
@@ -104,8 +105,9 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
     v[3].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[7];
 
     int offset = i * VERTEX_ELEMENTS;
-    memcpy(game->gle->vertex_buffer + offset, v,
-           VERTEX_ELEMENTS * sizeof(float));
+    //    memcpy(game->gle->vertex_buffer + offset, v,
+    //           VERTEX_ELEMENTS * sizeof(float));
+    memcpy(game->asset_array + offset, v, VERTEX_ELEMENTS * sizeof(float));
 
     game->assets_count++;
     return game->assets[i];
@@ -156,7 +158,9 @@ void asset_move(asset_t *asset, asset_facing_e facing) {
     for (int y = 0; y < VERTEX_ELEMENTS; y += VERTEX_STRIDE) {
         float m[position_size];
         for (int x = 0; x < position_size; x++) { m[x] = v[cnt + x]; }
-        memcpy(game->gle->vertex_buffer + offset + y, m,
+        //        memcpy(game->gle->vertex_buffer + offset + y, m,
+        //               position_size * sizeof(float));
+        memcpy(game->asset_array + offset + y, m,
                position_size * sizeof(float));
         cnt += 3;
     }
@@ -180,8 +184,9 @@ void asset_animate(asset_t *asset) {
             float v[2];
             v[0] = uv[cnt + current_frame * 8];
             v[1] = uv[cnt + 1 + current_frame * 8];
-            memcpy(game->gle->vertex_buffer + offset + p, v,
-                   uv_size * sizeof(float));
+            //            memcpy(game->gle->vertex_buffer + offset + p, v,
+            //                   uv_size * sizeof(float));
+            memcpy(game->asset_array + offset + p, v, uv_size * sizeof(float));
             cnt += 2;
         }
 
@@ -221,8 +226,9 @@ void asset_destroy(asset_t *asset) {
                  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
     int offset = asset->index * VERTEX_ELEMENTS;
-    memcpy(game->gle->vertex_buffer + offset, v,
-           VERTEX_ELEMENTS * sizeof(float));
+    //    memcpy(game->gle->vertex_buffer + offset, v,
+    //           VERTEX_ELEMENTS * sizeof(float));
+    memcpy(game->asset_array + offset, v, VERTEX_ELEMENTS * sizeof(float));
 
     for (int x = 0; x < SPRITE_TOTAL; x++) {
         animation_destroy(asset->animations[x]);

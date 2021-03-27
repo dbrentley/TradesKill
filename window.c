@@ -33,7 +33,7 @@ void set_aspect(int width, int height) {
 
     mat4x4 m, p;
     mat4x4_identity(m);
-    mat4x4_ortho(p, -aspect * zoom, aspect * zoom, -zoom, zoom, 1.0f, -1.0f);
+    mat4x4_ortho(p, -aspect * zoom, aspect * zoom, -zoom, zoom, 1, -1);
     mat4x4_translate_in_place(p, -hx, -hy, -1);
     mat4x4_mul(game->window->mvp, p, m);
 
@@ -183,15 +183,12 @@ void window_init(char *title) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);
 
-    // depth-testing interprets a smaller value as "closer"
-    glDepthFunc(GL_LESS);
-
     glClearColor(0.169f, 0.169f, 0.169f, 0.1f);
 
     set_aspect(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
 
 void window_destroy() {
-    ffree(game->window->gl_window, "133 window.c");
-    ffree(game->window, "134 window.c");
+    ffree(game->window->gl_window, "window gl_window");
+    ffree(game->window, "window");
 }

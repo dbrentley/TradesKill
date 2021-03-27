@@ -45,6 +45,9 @@ void game_init(char *name) {
     game->asset_index = malloc(MAX_SPRITES * sizeof(int));
     checkm(game->asset_index);
 
+    game->asset_array = malloc(MAX_SPRITES * sizeof(float) * VERTEX_ELEMENTS);
+    checkm(game->asset_array);
+
     assets_init();
     game->assets_total = MAX_SPRITES;
 
@@ -96,5 +99,6 @@ void game_destroy() {
     atlas_destroy();
 
     ffree(game->gle, "gle game_destroy");
+    ffree(game->asset_array, "asset_array game_destroy");
     ffree(game, "game_destroy");
 }
