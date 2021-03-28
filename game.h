@@ -46,7 +46,11 @@ extern bool key_down;
 
 void game_init(char *name);
 
+void game_update();
+
 void game_render();
+
+void game_asset_sort_z();
 
 void game_destroy();
 

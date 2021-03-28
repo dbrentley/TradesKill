@@ -51,7 +51,8 @@ void asset_init(int n);
 void assets_destroy();
 
 asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
-                      int z, animation_type_e default_animation, bool one_shot);
+                      int z_index, animation_type_e default_animation,
+                      bool one_shot);
 
 void asset_move(asset_t *asset, asset_facing_e facing);
 

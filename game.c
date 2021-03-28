@@ -91,6 +91,53 @@ void game_init(char *name) {
     game->running = true;
 }
 
+void game_update() {
+    for (int x = 0; x < game->assets_count; x++) {
+        if (game->assets[x]->index != -1) {
+            game->assets[x]->update(game->assets[x]);
+        }
+    }
+}
+
+void game_asset_sort_z() {
+    int asset_index[game->assets_count][2];
+    int asset_index_cnt = 0;
+    for (int x = 0; x < game->assets_count; x++) {
+        if (game->assets[x]->index != -1) {
+            asset_index[asset_index_cnt][0] = game->assets[x]->index;
+            asset_index[asset_index_cnt][1] = game->assets[x]->z_index;
+            asset_index_cnt++;
+        }
+    }
+    // bubble sort - inefficient - replace with selection or quick
+    bool sorted = false;
+    bool did_sort = false;
+    while (sorted == false) {
+        for (int i = 0; i < game->assets_count - 1; i++) {
+            if (asset_index[i][1] > asset_index[i + 1][1]) {
+                int t0 = asset_index[i][0];
+                int t1 = asset_index[i][1];
+                asset_index[i][0] = asset_index[i + 1][0];
+                asset_index[i][1] = asset_index[i + 1][1];
+                asset_index[i + 1][0] = t0;
+                asset_index[i + 1][1] = t1;
+                did_sort = true;
+            }
+        }
+        if (did_sort == true) {
+            sorted = false;
+            did_sort = false;
+        } else {
+            sorted = true;
+        }
+    }
+    for (int i = 0; i < game->assets_count; i++) {
+        int offset = asset_index[i][0] * VERTEX_ELEMENTS;
+        memcpy(game->gle->vertex_buffer + (i * VERTEX_ELEMENTS),
+               game->asset_array + offset, VERTEX_ELEMENTS * sizeof(float));
+    }
+}
+
 void game_destroy() {
     state_destroy();
     timer_destroy();

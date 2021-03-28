@@ -19,22 +19,23 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-    asset_create(ORE_GOLD, NULL, -2.0f, 0, 0, NONE, false);
+    float min = -45.0f;
+    float max = 45.0f;
 
+    for (int i = 0; i < 50000; i++) {
+        asset_create(ORE_GOLD, NULL, float_rand(min, max), float_rand(min, max),
+                     0, NONE, false);
+    }
     hero = asset_create(HERO, "hero", 0, 0, 9, IDLE_E, false);
     hero->speed = 5.0f;
 
-    asset_create(ORE_COPPER, NULL, -4.0f, 0, 1, NONE, false);
-    asset_create(ORE_GOLD, NULL, -3.0f, 0, 2, NONE, false);
-    asset_create(ORE_GOLD, NULL, -5.0f, 0, 5, NONE, false);
 
+    glBindTexture(GL_TEXTURE_2D, game->atlas->texture);
+    glBindVertexArray(game->gle->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
 
     while (!game->window->should_close && game->running) {
         timer_start();
-
-        glBindTexture(GL_TEXTURE_2D, game->atlas->texture);
-        glBindVertexArray(game->gle->vao);
-        glBindBuffer(GL_ARRAY_BUFFER, game->gle->vbo);
 
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(default_program);
@@ -42,7 +43,6 @@ int main() {
                            (const GLfloat *) game->window->mvp);
         set_aspect(game->window->width, game->window->height);
 
-        // update assets
         for (int x = 0; x < game->assets_count; x++) {
             if (game->assets[x]->index != -1) {
                 game->assets[x]->update(game->assets[x]);
@@ -55,10 +55,10 @@ int main() {
             if (game->assets[x]->index != -1) {
                 asset_index[asset_index_cnt][0] = game->assets[x]->index;
                 asset_index[asset_index_cnt][1] = game->assets[x]->z_index;
+                //asset_index[asset_index_cnt][1] = game->assets[x]->position.y;
                 asset_index_cnt++;
             }
         }
-
         // bubble sort - inefficient - replace with selection or quick
         bool sorted = false;
         bool did_sort = false;
@@ -82,9 +82,8 @@ int main() {
             }
         }
 
-
         for (int i = 0; i < game->assets_count; i++) {
-            int offset = asset_index[i][0] * VERTEX_ELEMENTS;
+            int offset = (int) asset_index[i][0] * VERTEX_ELEMENTS;
             memcpy(game->gle->vertex_buffer + (i * VERTEX_ELEMENTS),
                    game->asset_array + offset, VERTEX_ELEMENTS * sizeof(float));
         }

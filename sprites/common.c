@@ -7,6 +7,7 @@
 #include "../utils.h"
 
 void add_bling(asset_t *asset, double frequency) {
+    return;
     double r = mtwist_drand(game->mt);
     double t = frequency;
     if (r > t) { return; }
