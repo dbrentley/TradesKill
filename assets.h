@@ -30,7 +30,7 @@ struct asset_t {
     bool one_shot;
     bool dirty;
     int index;
-    int z_index;
+    float col_height;
     float scale;
     float speed;
     char *name;
@@ -51,8 +51,7 @@ void asset_init(int n);
 void assets_destroy();
 
 asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
-                      int z_index, animation_type_e default_animation,
-                      bool one_shot);
+                      animation_type_e default_animation, bool one_shot);
 
 void asset_move(asset_t *asset, asset_facing_e facing);
 

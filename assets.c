@@ -37,8 +37,7 @@ void asset_init(int n) {
 }
 
 asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
-                      int z_index, animation_type_e default_animation,
-                      bool one_shot) {
+                      animation_type_e default_animation, bool one_shot) {
     int i;
     for (i = 0; i < game->assets_total; i++) {
         if (game->assets[i]->index == -1) { break; }
@@ -74,7 +73,7 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
     game->assets[i]->position.x = x;
     game->assets[i]->position.y = y;
     game->assets[i]->position.z = 1.0f;
-    game->assets[i]->z_index = z_index;
+    game->assets[i]->col_height = (float) game->assets[i]->sprite->size.height;
     game->assets[i]->state = default_animation;
 
     vertex_t v[4];

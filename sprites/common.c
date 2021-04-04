@@ -7,7 +7,6 @@
 #include "../utils.h"
 
 void add_bling(asset_t *asset, double frequency) {
-    return;
     double r = mtwist_drand(game->mt);
     double t = frequency;
     if (r > t) { return; }
@@ -16,6 +15,6 @@ void add_bling(asset_t *asset, double frequency) {
     float max_offset = 0.35f;
     asset_create(EFFECT_BLING, NULL,
                  asset->position.x + float_rand(min_offset, max_offset),
-                 asset->position.y + float_rand(min_offset, max_offset),
-                 asset->z_index + 1, NONE, true);
+                 asset->position.y + float_rand(min_offset, max_offset), NONE,
+                 true);
 }

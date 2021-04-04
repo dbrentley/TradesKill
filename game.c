@@ -105,7 +105,7 @@ void game_asset_sort_z() {
     for (int x = 0; x < game->assets_count; x++) {
         if (game->assets[x]->index != -1) {
             asset_index[asset_index_cnt][0] = game->assets[x]->index;
-            asset_index[asset_index_cnt][1] = game->assets[x]->z_index;
+            asset_index[asset_index_cnt][1] = game->assets[x]->col_height;
             asset_index_cnt++;
         }
     }
