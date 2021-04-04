@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(TradesKill C)
 
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -DGLEW_STATIC")
 
 include_directories("${PROJECT_SOURCE_DIR}/lib")
 include_directories("${PROJECT_SOURCE_DIR}/lib/include")
@@ -13,7 +13,16 @@ set(GLEW_ROOT "${PROJECT_SOURCE_DIR}/lib")
 
 find_package(OpenGL REQUIRED)
 
-add_executable(TradesKill main.c globals.h keyboard.c keyboard.h window.c
+set(RES_FILES "")
+if (MINGW)
+    set(RES_FILES "assets/TradesKill.rc")
+    set(CMAKE_RC_COMPILER_INIT windres)
+    ENABLE_LANGUAGE(RC)
+    SET(CMAKE_RC_COMPILE_OBJECT
+        "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
+endif (MINGW)
+
+add_executable(TradesKill ${RES_FILES} glew.c main.c globals.h keyboard.c keyboard.h window.c
                window.h timer.c timer.h state.c state.h mouse.c mouse.h linmath.h
                game.c game.h sprite.c sprite.h shader.c shader.h atlas.c
                atlas.h renderer.c renderer.h utils.c utils.h animation.c animation.h
@@ -35,16 +44,11 @@ add_custom_command(TARGET TradesKill POST_BUILD
                    ${CMAKE_SOURCE_DIR}/assets
                    ${CMAKE_BINARY_DIR}/assets)
 
-add_custom_command(TARGET TradesKill POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy
-                   ${CMAKE_SOURCE_DIR}/lib/glew32.dll
-                   ${CMAKE_BINARY_DIR}/)
-
 add_custom_command(TARGET TradesKill PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E remove_directory
-        ${CMAKE_BINARY_DIR}/assets)
+                   COMMAND ${CMAKE_COMMAND} -E remove_directory
+                   ${CMAKE_BINARY_DIR}/assets)
 
 add_custom_command(TARGET TradesKill POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/assets
-        ${CMAKE_BINARY_DIR}/assets)
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                   ${CMAKE_SOURCE_DIR}/assets
+                   ${CMAKE_BINARY_DIR}/assets)
