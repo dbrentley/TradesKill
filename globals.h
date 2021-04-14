@@ -12,6 +12,11 @@
 #define DEFAULT_HEIGHT 720
 #define MAX_SPRITES 1000000
 
+#define BOUNDS_L -24
+#define BOUNDS_R 24
+#define BOUNDS_U -14
+#define BOUNDS_D 14
+
 #define VERTEX_ELEMENTS 20
 #define VERTEX_STRIDE 5
 

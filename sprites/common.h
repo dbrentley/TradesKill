@@ -7,6 +7,8 @@
 
 #include "../assets.h"
 
+void animate(asset_t *asset);
+
 void add_bling(asset_t *asset, double frequency);
 
 #endif//TRADESKILL_COMMON_H

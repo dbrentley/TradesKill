@@ -33,8 +33,10 @@ void set_aspect(int width, int height) {
 
     mat4x4 m, p;
     mat4x4_identity(m);
-    mat4x4_ortho(p, -aspect * zoom, aspect * zoom, -zoom, zoom, 1, -1);
+    mat4x4_ortho(p, -aspect * zoom, aspect * zoom, -zoom, zoom, 0, -1);
     mat4x4_translate_in_place(p, -hx, -hy, -1);
+    //mat4x4_translate_in_place(p, (-aspect * zoom) - hx, -zoom, -1);
+    //mat4x4_rotate_Z(m, m, (float) glfwGetTime() * 10.0f);
     mat4x4_mul(game->window->mvp, p, m);
 
     game->window->update_aspect = true;
@@ -126,7 +128,7 @@ void window_init(char *title) {
 
     game->window->width = DEFAULT_WIDTH;
     game->window->height = DEFAULT_HEIGHT;
-    game->window->zoom = 11.0f;
+    game->window->zoom = 13.0f;
     game->window->should_close = false;
     game->window->should_resize = false;
     game->window->update_aspect = false;

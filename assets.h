@@ -30,6 +30,7 @@ struct asset_t {
     bool one_shot;
     bool dirty;
     int index;
+    float z_index;
     float col_height;
     float scale;
     float speed;

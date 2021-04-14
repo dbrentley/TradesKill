@@ -1,8 +1,5 @@
 #include "game.h"
 #include "shader.h"
-#include "utils.h"
-
-#include <stdlib.h>
 
 game_t *game;
 asset_t *hero;
@@ -19,16 +16,10 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-    float min = -45.0f;
-    float max = 45.0f;
-
-    for (int i = 0; i < 50; i++) {
-        asset_create(ORE_GOLD, NULL, float_rand(min, max), float_rand(min, max),
-                     NONE, false);
-    }
-    hero = asset_create(HERO, "hero", 0, 0, IDLE_E, false);
+    hero = asset_create(HERO, "hero", 128, 128, IDLE_E, false);
     hero->speed = 5.0f;
-
+    hero->visible = true;
+    hero->z_index = 99;
 
     glBindTexture(GL_TEXTURE_2D, game->atlas->texture);
     glBindVertexArray(game->gle->vao);
@@ -43,20 +34,17 @@ int main() {
                            (const GLfloat *) game->window->mvp);
         set_aspect(game->window->width, game->window->height);
 
-        for (int x = 0; x < game->assets_count; x++) {
-            if (game->assets[x]->index != -1) {
-                game->assets[x]->update(game->assets[x]);
-            }
-        }
+        game_update();
 
         float asset_index[game->assets_count][2];
         int asset_index_cnt = 0;
-        for (int x = 0; x < game->assets_count; x++) {
-            if (game->assets[x]->index != -1) {
+        for (int x = game->assets_count; x > 0; x--) {
+            if (game->assets[x]->index != -1 && game->assets[x]->visible) {
                 asset_index[asset_index_cnt][0] =
                         (float) game->assets[x]->index;
                 //asset_index[asset_index_cnt][1] = game->assets[x]->col_height;
-                asset_index[asset_index_cnt][1] = game->assets[x]->position.y;
+                //asset_index[asset_index_cnt][1] = game->assets[x]->position.y;
+                asset_index[asset_index_cnt][1] = game->assets[x]->z_index;
                 asset_index_cnt++;
             }
         }

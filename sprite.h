@@ -9,12 +9,12 @@
 
 typedef struct sprite_t sprite_t;
 
-
 typedef enum {
     HERO,
     ORE_COPPER,
     ORE_GOLD,
     EFFECT_BLING,
+    GRASS,
     SPRITE_TOTAL
 } sprite_type_e;
 

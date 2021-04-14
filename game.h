@@ -14,6 +14,13 @@
 #include "window.h"
 
 typedef struct {
+    float up;
+    float down;
+    float left;
+    float right;
+} viewport_bounds_t;
+
+typedef struct {
     float *vertex_buffer;
     uint32_t *element_buffer;
     GLuint vao;
@@ -32,8 +39,10 @@ typedef struct {
     int assets_total;
     int assets_count;
     int *asset_index;
+    int *viewport;
     bool running;
     float *asset_array;
+    viewport_bounds_t viewport_bounds;
     asset_t **assets;
     queues_t queues;
     mtwist *mt;

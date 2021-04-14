@@ -5,11 +5,13 @@
 #include "assets.h"
 #include "game.h"
 #include "sprites/effect_bling.h"
+#include "sprites/grass.h"
 #include "sprites/hero.h"
 #include "sprites/ore_copper.h"
 #include "sprites/ore_gold.h"
 #include "utils.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 void assets_init() {
@@ -47,6 +49,9 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
         case HERO:
             hero_init(game->assets[i]);
             break;
+        case GRASS:
+            grass_init(game->assets[i]);
+            break;
         case ORE_GOLD:
             ore_gold_init(game->assets[i]);
             break;
@@ -68,13 +73,17 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
     }
 
     game->assets[i]->index = i;
-    game->assets[i]->visible = true;
+    game->assets[i]->z_index = 0;
     game->assets[i]->one_shot = one_shot;
     game->assets[i]->position.x = x;
     game->assets[i]->position.y = y;
-    game->assets[i]->position.z = 1.0f;
+    game->assets[i]->position.z = 1;
     game->assets[i]->col_height = (float) game->assets[i]->sprite->size.height;
     game->assets[i]->state = default_animation;
+    game->assets[i]->animations[NONE] =
+            animation_create(NONE, game->assets[i]->sprite, 1,
+                             game->assets[i]->sprite->atlas_offset.x,
+                             game->assets[i]->sprite->atlas_offset.y, 0);
 
     vertex_t v[4];
 
@@ -115,15 +124,22 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
 void asset_move(asset_t *asset, asset_facing_e facing) {
     float delta = (float) (asset->speed * game->timer->delta);
 
+    if ((game->keys[GLFW_KEY_A] && game->keys[GLFW_KEY_W]) ||
+        (game->keys[GLFW_KEY_W] && game->keys[GLFW_KEY_D]) ||
+        (game->keys[GLFW_KEY_S] && game->keys[GLFW_KEY_D]) ||
+        (game->keys[GLFW_KEY_A] && game->keys[GLFW_KEY_S])) {
+        delta /= 1.5f;
+    }
+
     switch (facing) {
         case N:
             asset->position.y += delta;
             break;
-        case E:
-            asset->position.x += delta;
-            break;
         case S:
             asset->position.y -= delta;
+            break;
+        case E:
+            asset->position.x += delta;
             break;
         case W:
             asset->position.x -= delta;

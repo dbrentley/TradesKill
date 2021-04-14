@@ -48,8 +48,18 @@ void game_init(char *name) {
     game->asset_array = malloc(MAX_SPRITES * sizeof(float) * VERTEX_ELEMENTS);
     checkm(game->asset_array);
 
+    size_t viewport_size = 1024 * 1024;
+    game->viewport = malloc(viewport_size * sizeof(int));
+    checkm(game->viewport);
+    for (int x = 0; x < viewport_size; x++) { game->viewport[x] = -1; }
+
     assets_init();
     game->assets_total = MAX_SPRITES;
+
+    game->viewport_bounds.up = 0;
+    game->viewport_bounds.right = 0;
+    game->viewport_bounds.left = 0;
+    game->viewport_bounds.right = 0;
 
     // vao
     glGenVertexArrays(1, &game->gle->vao);
@@ -91,7 +101,41 @@ void game_init(char *name) {
     game->running = true;
 }
 
+void update_viewport() {
+    //asset_t *grass = asset_create(GRASS, NULL, 0, 0, NONE, false);
+    int viewport_width = 256;
+    int viewport_height = 256;
+    int viewport_size = viewport_width * viewport_height;
+
+    for (int x = 0; x < viewport_size; x++) {
+        if (game->viewport[x] == -1) {
+            int x_pos = x % viewport_width;
+            int y_pos = floor((int) (x / viewport_width));
+
+            asset_t *asset = asset_create(GRASS, NULL, (float) x_pos,
+                                          (float) y_pos, NONE, false);
+            game->viewport[x] = asset->index;
+            asset->visible = true;
+        }
+    }
+
+
+    //    for (int x = 0; x < viewport_size; x++) {
+    //        if (game->viewport[x] == -1) {
+    //            int x_pos = x % viewport_width;
+    //            int y_pos = floor((int) (x / viewport_width));
+    //            asset_t *asset = asset_create(
+    //                    GRASS, NULL,
+    //                    (float) ((float) x_pos - ((float) viewport_width / 2)),
+    //                    (float) y_pos - ((float) viewport_height / 2), NONE, false);
+    //            game->viewport[x] = asset->index;
+    //            asset->visible = true;
+    //        }
+    //    }
+}
+
 void game_update() {
+    update_viewport();
     for (int x = 0; x < game->assets_count; x++) {
         if (game->assets[x]->index != -1) {
             game->assets[x]->update(game->assets[x]);

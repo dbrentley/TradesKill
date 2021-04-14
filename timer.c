@@ -37,8 +37,13 @@ void timer_end() {
         game->timer->frame_count = 0;
         game->timer->previous_time = game->timer->time;
 #ifdef DEBUG_ON
-        printf("FPS: %i, FT: %f, Assets: %d\n", game->timer->fps,
-               game->timer->delta, game->assets_count);
+        printf("FPS: %i, FT: %f, Assets: %d, Mouse: %f, %f, Zoom: %f\n",
+               game->timer->fps, game->timer->delta, game->assets_count,
+               game->window->mouse_x, game->window->mouse_y,
+               game->window->zoom);
+        printf("up: %f, down: %f, left: %f, right: %f\n",
+               game->viewport_bounds.up, game->viewport_bounds.down,
+               game->viewport_bounds.left, game->viewport_bounds.right);
 #endif
     }
 }

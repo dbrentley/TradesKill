@@ -12,6 +12,7 @@ typedef enum {
     WALK_E,
     WALK_S,
     WALK_W,
+    WALK_NW,
     RUN_N,
     RUN_E,
     RUN_S,
