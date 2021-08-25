@@ -16,6 +16,7 @@ $ git clone https://github.com/dbrentley/TradesKill.git
 $ cd TradesKill
 $ mkdir build && cd build
 $ cmake ..
+$ make
 ```
 
 ## Run
