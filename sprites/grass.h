@@ -6,6 +6,7 @@
 #define TRADESKILL_GRASS_H
 
 #include "../assets.h"
+#include <stdlib.h>
 
 void grass_update(asset_t *asset) {
     // hello
@@ -13,7 +14,11 @@ void grass_update(asset_t *asset) {
 
 void grass_init(asset_t *asset) {
     asset->sprite = sprite_create(GRASS);
-    asset->sprite->atlas_offset.x = 0;
+    int r = (rand() % 15);
+    int rg = 0;
+    if (r == 0) { rg = (rand() % 8); }
+
+    asset->sprite->atlas_offset.x = rg;
     asset->sprite->atlas_offset.y = 1;
     asset->sprite->size.width = 16;
     asset->sprite->size.height = 16;

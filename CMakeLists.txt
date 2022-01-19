@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.14)
 project(TradesKill C)
 
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -DGLEW_STATIC")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -DGLEW_STATIC")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DGLEW_STATIC")
 
 include_directories("${PROJECT_SOURCE_DIR}/lib")
 include_directories("${PROJECT_SOURCE_DIR}/lib/include")
@@ -22,7 +23,7 @@ add_executable(TradesKill ${RES_FILES} glew.c main.c globals.h keyboard.c keyboa
                sprites/effect_bling.h libmtwist/mt.c
                libmtwist/mtwist.h libmtwist/mtwist_internal.h libmtwist/seed.c
                sprites/common.c sprites/common.h sprites/hero.h
-               sprites/grass.h libmtwist/mtwist.h stb_image.h)
+               sprites/grass.h libmtwist/mtwist.h stb_image.h sprites/ore.h sprites/tree.h system.c system.h)
 
 target_link_libraries(TradesKill glu32 glew32.dll ${OPENGL_LIBRARIES} glfw3 m)
 

@@ -7,11 +7,12 @@
 #include "sprites/effect_bling.h"
 #include "sprites/grass.h"
 #include "sprites/hero.h"
+#include "sprites/ore.h"
 #include "sprites/ore_copper.h"
 #include "sprites/ore_gold.h"
+#include "sprites/tree.h"
 #include "utils.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 
 void assets_init() {
@@ -38,6 +39,66 @@ void asset_init(int n) {
     }
 }
 
+asset_t *asset_create2(void *asset, const char *name, float x, float y,
+                       animation_type_e default_animation, bool one_shot) {
+    if (name != NULL) {
+        game->assets[i]->name =
+                calloc(strlen(name) + 1, strlen(name) * sizeof(char) + 1);
+        checkm(game->assets[i]->name);
+        strncpy(game->assets[i]->name, name, strlen(name));
+    }
+
+    game->assets[i]->index = i;
+    game->assets[i]->z_index = 0;
+    game->assets[i]->one_shot = one_shot;
+    game->assets[i]->position.x = x;
+    game->assets[i]->position.y = y;
+    game->assets[i]->position.z = 1;
+    game->assets[i]->grid_width = game->assets[i]->sprite->size.width / 16;
+    game->assets[i]->grid_height = game->assets[i]->sprite->size.height / 16;
+    game->assets[i]->state = default_animation;
+    game->assets[i]->animations[NONE] =
+            animation_create(NONE, game->assets[i]->sprite, 1,
+                             game->assets[i]->sprite->atlas_offset.x,
+                             game->assets[i]->sprite->atlas_offset.y, 0);
+
+    vertex_t v[4];
+
+    // ll
+    v[0].position.x = game->assets[i]->position.x - game->assets[i]->scale;
+    v[0].position.y = game->assets[i]->position.y - game->assets[i]->scale;
+    v[0].position.z = game->assets[i]->position.z;
+    v[0].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[0];
+    v[0].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[1];
+    // lr
+    v[1].position.x = game->assets[i]->position.x + game->assets[i]->scale;
+    v[1].position.y = game->assets[i]->position.y - game->assets[i]->scale;
+    v[1].position.z = game->assets[i]->position.z;
+    v[1].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[2];
+    v[1].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[3];
+    // ur
+    v[2].position.x = game->assets[i]->position.x + game->assets[i]->scale;
+    v[2].position.y = game->assets[i]->position.y + game->assets[i]->scale;
+    v[2].position.z = game->assets[i]->position.z;
+    v[2].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[4];
+    v[2].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[5];
+    // ul
+    v[3].position.x = game->assets[i]->position.x - game->assets[i]->scale;
+    v[3].position.y = game->assets[i]->position.y + game->assets[i]->scale;
+    v[3].position.z = game->assets[i]->position.z;
+    v[3].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[6];
+    v[3].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[7];
+
+    int offset = i * VERTEX_ELEMENTS;
+    //    memcpy(game->gle->vertex_buffer + offset, v,
+    //           VERTEX_ELEMENTS * sizeof(float));
+    memcpy(game->asset_array + offset, v, VERTEX_ELEMENTS * sizeof(float));
+
+    game->assets_count++;
+    return game->assets[i];
+}
+
+
 asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
                       animation_type_e default_animation, bool one_shot) {
     int i;
@@ -51,6 +112,12 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
             break;
         case GRASS:
             grass_init(game->assets[i]);
+            break;
+        case TREE:
+            tree_init(game->assets[i]);
+            break;
+        case ORE:
+            ore_init(game->assets[i]);
             break;
         case ORE_GOLD:
             ore_gold_init(game->assets[i]);
@@ -78,7 +145,8 @@ asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
     game->assets[i]->position.x = x;
     game->assets[i]->position.y = y;
     game->assets[i]->position.z = 1;
-    game->assets[i]->col_height = (float) game->assets[i]->sprite->size.height;
+    game->assets[i]->grid_width = game->assets[i]->sprite->size.width / 16;
+    game->assets[i]->grid_height = game->assets[i]->sprite->size.height / 16;
     game->assets[i]->state = default_animation;
     game->assets[i]->animations[NONE] =
             animation_create(NONE, game->assets[i]->sprite, 1,
@@ -237,8 +305,7 @@ asset_t *asset_get_by_name(char *name) {
 void asset_destroy(asset_t *asset) {
     if (asset == NULL || asset->index == -1) { return; }
     game->assets_count--;
-    float v[] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    float v[20] = {0};
 
     int offset = asset->index * VERTEX_ELEMENTS;
     //    memcpy(game->gle->vertex_buffer + offset, v,

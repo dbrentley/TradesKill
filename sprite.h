@@ -15,6 +15,8 @@ typedef enum {
     ORE_GOLD,
     EFFECT_BLING,
     GRASS,
+    ORE,
+    TREE,
     SPRITE_TOTAL
 } sprite_type_e;
 

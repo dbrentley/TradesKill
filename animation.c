@@ -32,8 +32,8 @@ animation_t *animation_create(animation_type_e type, sprite_t *sprite,
     anim->frames = malloc(frame_total * 8 * sizeof(float));
     checkm(anim->frames);
 
-    float psw = game->atlas->pixel_size_width * game->atlas->sprite_width;
-    float psh = game->atlas->pixel_size_height * game->atlas->sprite_height;
+    float psw = game->atlas->pixel_size_width * (float) sprite->size.width;
+    float psh = game->atlas->pixel_size_height * (float) sprite->size.height;
 
     for (int x = 0; x < frame_total * 8; x += 8) {
         // ll

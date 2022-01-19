@@ -8,9 +8,12 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 game_t *game;
-pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+
+#define VIEWPORT_SIZE_X 128
+#define VIEWPORT_SIZE_Y 128
 
 void game_init(char *name) {
     game = malloc(sizeof(game_t));
@@ -32,6 +35,8 @@ void game_init(char *name) {
     state_init();
     atlas_init("assets/atlas.png", 16.0f, 16.0f);
 
+    game->system = system_init();
+
     game->gle = malloc(sizeof(game_gle_t));
     checkm(game->gle);
 
@@ -48,7 +53,7 @@ void game_init(char *name) {
     game->asset_array = malloc(MAX_SPRITES * sizeof(float) * VERTEX_ELEMENTS);
     checkm(game->asset_array);
 
-    size_t viewport_size = 1024 * 1024;
+    size_t viewport_size = VIEWPORT_SIZE_X * VIEWPORT_SIZE_Y;
     game->viewport = malloc(viewport_size * sizeof(int));
     checkm(game->viewport);
     for (int x = 0; x < viewport_size; x++) { game->viewport[x] = -1; }
@@ -60,6 +65,9 @@ void game_init(char *name) {
     game->viewport_bounds.right = 0;
     game->viewport_bounds.left = 0;
     game->viewport_bounds.right = 0;
+
+    game->seed = 0;
+    srand(game->seed);
 
     // vao
     glGenVertexArrays(1, &game->gle->vao);
@@ -99,18 +107,33 @@ void game_init(char *name) {
 
     game->assets_count = 0;
     game->running = true;
+
+    pthread_mutex_init(&lock, NULL);
+
+    //    game->update_z = 0;
+    //    pthread_t z_thread_id;
+    //    pthread_create(&z_thread_id, NULL, game_asset_sort_z, NULL);
 }
 
 void update_viewport() {
     //asset_t *grass = asset_create(GRASS, NULL, 0, 0, NONE, false);
-    int viewport_width = 256;
-    int viewport_height = 256;
+    int viewport_width = VIEWPORT_SIZE_X;
+    int viewport_height = VIEWPORT_SIZE_Y;
     int viewport_size = viewport_width * viewport_height;
 
     for (int x = 0; x < viewport_size; x++) {
+        /**
+         * TODO: Handle sprites larger than 16x16
+         */
         if (game->viewport[x] == -1) {
             int x_pos = x % viewport_width;
             int y_pos = floor((int) (x / viewport_width));
+
+            asset_t *ore = asset_create(TREE, NULL, (float) x_pos,
+                                        (float) y_pos, NONE, false);
+            game->viewport[x] = ore->index;
+            ore->visible = true;
+
 
             asset_t *asset = asset_create(GRASS, NULL, (float) x_pos,
                                           (float) y_pos, NONE, false);
@@ -118,24 +141,11 @@ void update_viewport() {
             asset->visible = true;
         }
     }
-
-
-    //    for (int x = 0; x < viewport_size; x++) {
-    //        if (game->viewport[x] == -1) {
-    //            int x_pos = x % viewport_width;
-    //            int y_pos = floor((int) (x / viewport_width));
-    //            asset_t *asset = asset_create(
-    //                    GRASS, NULL,
-    //                    (float) ((float) x_pos - ((float) viewport_width / 2)),
-    //                    (float) y_pos - ((float) viewport_height / 2), NONE, false);
-    //            game->viewport[x] = asset->index;
-    //            asset->visible = true;
-    //        }
-    //    }
 }
 
 void game_update() {
     update_viewport();
+    // game->update_z = 1;
     for (int x = 0; x < game->assets_count; x++) {
         if (game->assets[x]->index != -1) {
             game->assets[x]->update(game->assets[x]);
@@ -143,42 +153,49 @@ void game_update() {
     }
 }
 
-void game_asset_sort_z() {
-    int asset_index[game->assets_count][2];
-    int asset_index_cnt = 0;
-    for (int x = 0; x < game->assets_count; x++) {
-        if (game->assets[x]->index != -1) {
-            asset_index[asset_index_cnt][0] = game->assets[x]->index;
-            asset_index[asset_index_cnt][1] = game->assets[x]->col_height;
-            asset_index_cnt++;
-        }
-    }
-    // bubble sort - inefficient - replace with selection or quick
-    bool sorted = false;
-    bool did_sort = false;
-    while (sorted == false) {
-        for (int i = 0; i < game->assets_count - 1; i++) {
-            if (asset_index[i][1] > asset_index[i + 1][1]) {
-                int t0 = asset_index[i][0];
-                int t1 = asset_index[i][1];
-                asset_index[i][0] = asset_index[i + 1][0];
-                asset_index[i][1] = asset_index[i + 1][1];
-                asset_index[i + 1][0] = t0;
-                asset_index[i + 1][1] = t1;
-                did_sort = true;
+void *game_asset_sort_z() {
+    while (game != NULL) {
+        if (game->update_z == 1) {
+            int asset_index[game->assets_count][2];
+            int asset_index_cnt = 0;
+            for (int x = 0; x < game->assets_count; x++) {
+                if (game->assets[x]->index != -1) {
+                    asset_index[asset_index_cnt][0] = game->assets[x]->index;
+                    asset_index[asset_index_cnt][1] =
+                            game->assets[x]->grid_height * 16;
+                    asset_index_cnt++;
+                }
             }
+            // bubble sort - inefficient - replace with selection or quick
+            bool sorted = false;
+            bool did_sort = false;
+            while (sorted == false) {
+                for (int i = 0; i < game->assets_count - 1; i++) {
+                    if (asset_index[i][1] > asset_index[i + 1][1]) {
+                        int t0 = asset_index[i][0];
+                        int t1 = asset_index[i][1];
+                        asset_index[i][0] = asset_index[i + 1][0];
+                        asset_index[i][1] = asset_index[i + 1][1];
+                        asset_index[i + 1][0] = t0;
+                        asset_index[i + 1][1] = t1;
+                        did_sort = true;
+                    }
+                }
+                if (did_sort == true) {
+                    sorted = false;
+                    did_sort = false;
+                } else {
+                    sorted = true;
+                }
+            }
+            for (int i = 0; i < game->assets_count; i++) {
+                int offset = asset_index[i][0] * VERTEX_ELEMENTS;
+                memcpy(game->gle->vertex_buffer + (i * VERTEX_ELEMENTS),
+                       game->asset_array + offset,
+                       VERTEX_ELEMENTS * sizeof(float));
+            }
+            game->update_z = 0;
         }
-        if (did_sort == true) {
-            sorted = false;
-            did_sort = false;
-        } else {
-            sorted = true;
-        }
-    }
-    for (int i = 0; i < game->assets_count; i++) {
-        int offset = asset_index[i][0] * VERTEX_ELEMENTS;
-        memcpy(game->gle->vertex_buffer + (i * VERTEX_ELEMENTS),
-               game->asset_array + offset, VERTEX_ELEMENTS * sizeof(float));
     }
 }
 

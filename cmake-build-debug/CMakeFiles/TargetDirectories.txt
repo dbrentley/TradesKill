@@ -1,0 +1,3 @@
+C:/Users/brent/CLionProjects/TradesKill/cmake-build-debug/CMakeFiles/TradesKill.dir
+C:/Users/brent/CLionProjects/TradesKill/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/brent/CLionProjects/TradesKill/cmake-build-debug/CMakeFiles/rebuild_cache.dir

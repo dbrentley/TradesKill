@@ -1,0 +1,3 @@
+"C:\Program Files\JetBrains\CLion 2020.2.4\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\TradesKill.dir/objects.a
+C:\msys64\mingw64\bin\ar.exe cr CMakeFiles\TradesKill.dir/objects.a @CMakeFiles\TradesKill.dir\objects1.rsp
+C:\msys64\mingw64\bin\gcc.exe  -DGLEW_STATIC -g -Wl,--whole-archive CMakeFiles\TradesKill.dir/objects.a -Wl,--no-whole-archive -o TradesKill.exe -Wl,--out-implib,libTradesKill.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\TradesKill.dir\linklibs.rsp

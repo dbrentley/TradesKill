@@ -10,6 +10,7 @@
 #include "libmtwist/mtwist.h"
 #include "queue.h"
 #include "state.h"
+#include "system.h"
 #include "timer.h"
 #include "window.h"
 
@@ -30,6 +31,7 @@ typedef struct {
 
 typedef struct {
     window_t *window;
+    system_t system;
     state_t *state;
     game_timer_t *timer;
     game_gle_t *gle;
@@ -38,6 +40,8 @@ typedef struct {
     int last_key;
     int assets_total;
     int assets_count;
+    int seed;
+    int update_z;
     int *asset_index;
     int *viewport;
     bool running;
@@ -59,7 +63,7 @@ void game_update();
 
 void game_render();
 
-void game_asset_sort_z();
+void *game_asset_sort_z();
 
 void game_destroy();
 

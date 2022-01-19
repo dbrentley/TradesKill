@@ -14,6 +14,7 @@
 typedef struct asset_t asset_t;
 
 typedef void (*asset_update_f)(asset_t *);
+void func(void (*f)(int));
 
 typedef enum { N, E, S, W } asset_facing_e;
 
@@ -30,8 +31,9 @@ struct asset_t {
     bool one_shot;
     bool dirty;
     int index;
+    int grid_width;
+    int grid_height;
     float z_index;
-    float col_height;
     float scale;
     float speed;
     char *name;
