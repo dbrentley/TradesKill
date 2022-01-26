@@ -14,16 +14,17 @@ set(GLEW_ROOT "${PROJECT_SOURCE_DIR}/lib")
 
 find_package(OpenGL REQUIRED)
 
-add_executable(TradesKill ${RES_FILES} glew.c main.c globals.h keyboard.c keyboard.h window.c
-               window.h timer.c timer.h state.c state.h mouse.c mouse.h linmath.h
-               game.c game.h sprite.c sprite.h shader.c shader.h atlas.c
-               atlas.h renderer.c renderer.h utils.c utils.h animation.c animation.h
-               sprites/ore_gold.h assets.h assets.c
-               sprites/ore_copper.h queue.h queue.c
-               sprites/effect_bling.h libmtwist/mt.c
-               libmtwist/mtwist.h libmtwist/mtwist_internal.h libmtwist/seed.c
-               sprites/common.c sprites/common.h sprites/hero.h
-               sprites/grass.h libmtwist/mtwist.h stb_image.h sprites/ore.h sprites/tree.h system.c system.h)
+add_executable(TradesKill ${RES_FILES} glew.c main.c globals.h keyboard.c
+               keyboard.h window.c window.h timer.c timer.h state.c state.h
+               mouse.c mouse.h linmath.h game.c game.h sprite.c sprite.h
+               shader.c shader.h atlas.c atlas.h renderer.c renderer.h utils.c
+               utils.h animation.c animation.h sprites/ore_gold.h assets.h
+               assets.c sprites/ore_copper.h queue.h queue.c
+               sprites/effect_bling.h libmtwist/mt.c libmtwist/mtwist.h
+               libmtwist/mtwist_internal.h libmtwist/seed.c sprites/common.c
+               sprites/common.h sprites/hero.h sprites/grass.h
+               libmtwist/mtwist.h stb_image.h sprites/ore.h sprites/tree.h
+               system.c system.h tskmath.h)
 
 target_link_libraries(TradesKill glu32 glew32.dll ${OPENGL_LIBRARIES} glfw3 m)
 

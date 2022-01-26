@@ -4,6 +4,7 @@
 
 #include "mouse.h"
 #include "game.h"
+#include "tskmath.h"
 #include "utils.h"
 
 #include <stdio.h>
@@ -59,4 +60,27 @@ void mouse_button_callback(GLFWwindow *gl_window, int button, int action,
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {}
     printf("Mouse x: %f, y: %f\n", game->window->mouse_x,
            game->window->mouse_y);
+
+    point_2d_t p;
+    p.x = hero->position.x;
+    p.y = hero->position.y;
+
+    point_2d_t q;
+    q.x = game->window->mouse_x;
+    q.y = game->window->mouse_y;
+
+    vector_2d_t v;
+    v.p = p;
+    v.q = q;
+
+    double pdir = get_vector_2d_direction(v);
+    double pdis = get_vector_2d_distance(v);
+    double pdeg = to_degrees(get_vector_2d_direction(v));
+
+    char title[512];
+    snprintf(title, 511, "dir: %lf, deg: %lf, dis: %lf, x: %lf, y: %lf\n", pdir,
+             pdeg, pdis, game->window->mouse_x, game->window->mouse_y);
+
+    //glfwSetWindowTitle(game->window->gl_window, title);
+    printf("%s\n", title);
 }

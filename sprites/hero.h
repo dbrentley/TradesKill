@@ -7,8 +7,10 @@
 
 #include "../assets.h"
 #include "../game.h"
+#include "../tskmath.h"
+#include <stdio.h>
 
-void hero_update(asset_t *asset) {
+static void hero_update(asset_t *asset) {
     asset->animations[asset->state]->time->time = glfwGetTime();
 
     // walk
@@ -42,7 +44,7 @@ void hero_update(asset_t *asset) {
     }
 }
 
-void hero_init(asset_t *asset) {
+static void hero_init(asset_t *asset) {
     asset->sprite = sprite_create(ORE_COPPER);
     asset->sprite->size.width = (int) game->atlas->sprite_width;
     asset->sprite->size.height = (int) game->atlas->sprite_height;

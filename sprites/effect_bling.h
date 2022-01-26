@@ -9,9 +9,9 @@
 #include "../game.h"
 #include "common.h"
 
-void effect_bling_update(asset_t *asset) { animate(asset); }
+static void effect_bling_update(asset_t *asset) { animate(asset); }
 
-void effect_bling_init(asset_t *asset) {
+static void effect_bling_init(asset_t *asset) {
     asset->sprite = sprite_create(EFFECT_BLING);
     asset->sprite->atlas_offset.x = 0;
     asset->sprite->atlas_offset.y = 2;

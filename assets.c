@@ -39,98 +39,19 @@ void asset_init(int n) {
     }
 }
 
-asset_t *asset_create2(void *asset, const char *name, float x, float y,
-                       animation_type_e default_animation, bool one_shot) {
-    if (name != NULL) {
-        game->assets[i]->name =
-                calloc(strlen(name) + 1, strlen(name) * sizeof(char) + 1);
-        checkm(game->assets[i]->name);
-        strncpy(game->assets[i]->name, name, strlen(name));
-    }
-
-    game->assets[i]->index = i;
-    game->assets[i]->z_index = 0;
-    game->assets[i]->one_shot = one_shot;
-    game->assets[i]->position.x = x;
-    game->assets[i]->position.y = y;
-    game->assets[i]->position.z = 1;
-    game->assets[i]->grid_width = game->assets[i]->sprite->size.width / 16;
-    game->assets[i]->grid_height = game->assets[i]->sprite->size.height / 16;
-    game->assets[i]->state = default_animation;
-    game->assets[i]->animations[NONE] =
-            animation_create(NONE, game->assets[i]->sprite, 1,
-                             game->assets[i]->sprite->atlas_offset.x,
-                             game->assets[i]->sprite->atlas_offset.y, 0);
-
-    vertex_t v[4];
-
-    // ll
-    v[0].position.x = game->assets[i]->position.x - game->assets[i]->scale;
-    v[0].position.y = game->assets[i]->position.y - game->assets[i]->scale;
-    v[0].position.z = game->assets[i]->position.z;
-    v[0].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[0];
-    v[0].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[1];
-    // lr
-    v[1].position.x = game->assets[i]->position.x + game->assets[i]->scale;
-    v[1].position.y = game->assets[i]->position.y - game->assets[i]->scale;
-    v[1].position.z = game->assets[i]->position.z;
-    v[1].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[2];
-    v[1].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[3];
-    // ur
-    v[2].position.x = game->assets[i]->position.x + game->assets[i]->scale;
-    v[2].position.y = game->assets[i]->position.y + game->assets[i]->scale;
-    v[2].position.z = game->assets[i]->position.z;
-    v[2].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[4];
-    v[2].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[5];
-    // ul
-    v[3].position.x = game->assets[i]->position.x - game->assets[i]->scale;
-    v[3].position.y = game->assets[i]->position.y + game->assets[i]->scale;
-    v[3].position.z = game->assets[i]->position.z;
-    v[3].uv.u = game->assets[i]->animations[game->assets[i]->state]->frames[6];
-    v[3].uv.v = game->assets[i]->animations[game->assets[i]->state]->frames[7];
-
-    int offset = i * VERTEX_ELEMENTS;
-    //    memcpy(game->gle->vertex_buffer + offset, v,
-    //           VERTEX_ELEMENTS * sizeof(float));
-    memcpy(game->asset_array + offset, v, VERTEX_ELEMENTS * sizeof(float));
-
-    game->assets_count++;
-    return game->assets[i];
-}
-
-
-asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
-                      animation_type_e default_animation, bool one_shot) {
+int get_next_asset_slot() {
     int i;
     for (i = 0; i < game->assets_total; i++) {
         if (game->assets[i]->index == -1) { break; }
     }
+    return i;
+}
 
-    switch (type) {
-        case HERO:
-            hero_init(game->assets[i]);
-            break;
-        case GRASS:
-            grass_init(game->assets[i]);
-            break;
-        case TREE:
-            tree_init(game->assets[i]);
-            break;
-        case ORE:
-            ore_init(game->assets[i]);
-            break;
-        case ORE_GOLD:
-            ore_gold_init(game->assets[i]);
-            break;
-        case ORE_COPPER:
-            ore_copper_init(game->assets[i]);
-            break;
-        case EFFECT_BLING:
-            effect_bling_init(game->assets[i]);
-            break;
-        default:
-            break;
-    }
+asset_t *asset_create(asset_init_ptr asset_init, const char *name, float x,
+                      float y, animation_type_e default_animation,
+                      bool one_shot) {
+    int i = get_next_asset_slot();
+    (*asset_init)(game->assets[i]);
 
     if (name != NULL) {
         game->assets[i]->name =

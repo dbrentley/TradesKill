@@ -5,9 +5,10 @@
 #include "common.h"
 #include "../game.h"
 #include "../utils.h"
+#include "effect_bling.h"
 
 void animate(asset_t *asset) {
-    float speed = 1.0 / asset->animations[asset->state]->speed;
+    float speed = 1.0f / asset->animations[asset->state]->speed;
 
     asset->animations[asset->state]->time->time = glfwGetTime();
 
@@ -26,7 +27,7 @@ void add_bling(asset_t *asset, double frequency) {
 
     float min_offset = -0.35f;
     float max_offset = 0.35f;
-    asset_create(EFFECT_BLING, NULL,
+    asset_create(effect_bling_init, NULL,
                  asset->position.x + float_rand(min_offset, max_offset),
                  asset->position.y + float_rand(min_offset, max_offset), NONE,
                  true);

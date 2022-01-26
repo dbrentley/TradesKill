@@ -1,5 +1,8 @@
 #include "game.h"
 #include "shader.h"
+#include "sprites/hero.h"
+#include "tskmath.h"
+#include <stdio.h>
 #include <unistd.h>
 
 
@@ -66,7 +69,7 @@ int main() {
     GLint mvp_uniform =
             shader_program_get_uniform_location(default_program, "mvp");
 
-    hero = asset_create(HERO, "hero", 64, 64, IDLE_E, false);
+    hero = asset_create(hero_init, "hero", 64, 64, IDLE_E, false);
     hero->speed = 5.0f;
     hero->visible = true;
     hero->z_index = 99;

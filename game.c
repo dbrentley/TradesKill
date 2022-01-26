@@ -3,6 +3,8 @@
 //
 
 #include "game.h"
+#include "sprites/grass.h"
+#include "sprites/ore.h"
 #include "utils.h"
 
 #include <pthread.h>
@@ -116,7 +118,6 @@ void game_init(char *name) {
 }
 
 void update_viewport() {
-    //asset_t *grass = asset_create(GRASS, NULL, 0, 0, NONE, false);
     int viewport_width = VIEWPORT_SIZE_X;
     int viewport_height = VIEWPORT_SIZE_Y;
     int viewport_size = viewport_width * viewport_height;
@@ -127,18 +128,19 @@ void update_viewport() {
          */
         if (game->viewport[x] == -1) {
             int x_pos = x % viewport_width;
-            int y_pos = floor((int) (x / viewport_width));
+            int y_pos = (int) floor((double) x / viewport_width);
 
-            asset_t *ore = asset_create(TREE, NULL, (float) x_pos,
+            asset_t *ore = asset_create(ore_init, NULL, (float) x_pos,
                                         (float) y_pos, NONE, false);
-            game->viewport[x] = ore->index;
             ore->visible = true;
 
 
-            asset_t *asset = asset_create(GRASS, NULL, (float) x_pos,
+            asset_t *grass = asset_create(grass_init, NULL, (float) x_pos,
                                           (float) y_pos, NONE, false);
-            game->viewport[x] = asset->index;
-            asset->visible = true;
+            grass->visible = true;
+
+
+            game->viewport[x] = 1;
         }
     }
 }

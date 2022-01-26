@@ -43,6 +43,7 @@ CMakeFiles/TradesKill.dir/assets.c.obj
  C:/Users/brent/CLionProjects/TradesKill/state.h
  C:/Users/brent/CLionProjects/TradesKill/system.h
  C:/Users/brent/CLionProjects/TradesKill/timer.h
+ C:/Users/brent/CLionProjects/TradesKill/tskmath.h
  C:/Users/brent/CLionProjects/TradesKill/utils.h
  C:/Users/brent/CLionProjects/TradesKill/window.h
 CMakeFiles/TradesKill.dir/atlas.c.obj
@@ -76,6 +77,8 @@ CMakeFiles/TradesKill.dir/game.c.obj
  C:/Users/brent/CLionProjects/TradesKill/linmath.h
  C:/Users/brent/CLionProjects/TradesKill/queue.h
  C:/Users/brent/CLionProjects/TradesKill/sprite.h
+ C:/Users/brent/CLionProjects/TradesKill/sprites/grass.h
+ C:/Users/brent/CLionProjects/TradesKill/sprites/ore.h
  C:/Users/brent/CLionProjects/TradesKill/state.h
  C:/Users/brent/CLionProjects/TradesKill/system.h
  C:/Users/brent/CLionProjects/TradesKill/timer.h
@@ -127,9 +130,11 @@ CMakeFiles/TradesKill.dir/main.c.obj
  C:/Users/brent/CLionProjects/TradesKill/queue.h
  C:/Users/brent/CLionProjects/TradesKill/shader.h
  C:/Users/brent/CLionProjects/TradesKill/sprite.h
+ C:/Users/brent/CLionProjects/TradesKill/sprites/hero.h
  C:/Users/brent/CLionProjects/TradesKill/state.h
  C:/Users/brent/CLionProjects/TradesKill/system.h
  C:/Users/brent/CLionProjects/TradesKill/timer.h
+ C:/Users/brent/CLionProjects/TradesKill/tskmath.h
  C:/Users/brent/CLionProjects/TradesKill/window.h
 CMakeFiles/TradesKill.dir/mouse.c.obj
  ../lib/include/GL/glew.h
@@ -148,6 +153,7 @@ CMakeFiles/TradesKill.dir/mouse.c.obj
  C:/Users/brent/CLionProjects/TradesKill/state.h
  C:/Users/brent/CLionProjects/TradesKill/system.h
  C:/Users/brent/CLionProjects/TradesKill/timer.h
+ C:/Users/brent/CLionProjects/TradesKill/tskmath.h
  C:/Users/brent/CLionProjects/TradesKill/utils.h
  C:/Users/brent/CLionProjects/TradesKill/window.h
 CMakeFiles/TradesKill.dir/queue.c.obj
@@ -183,6 +189,7 @@ CMakeFiles/TradesKill.dir/sprites/common.c.obj
  C:/Users/brent/CLionProjects/TradesKill/sprite.h
  C:/Users/brent/CLionProjects/TradesKill/sprites/common.c
  C:/Users/brent/CLionProjects/TradesKill/sprites/common.h
+ C:/Users/brent/CLionProjects/TradesKill/sprites/effect_bling.h
  C:/Users/brent/CLionProjects/TradesKill/state.h
  C:/Users/brent/CLionProjects/TradesKill/system.h
  C:/Users/brent/CLionProjects/TradesKill/timer.h
@@ -225,6 +232,7 @@ CMakeFiles/TradesKill.dir/timer.c.obj
  C:/Users/brent/CLionProjects/TradesKill/system.h
  C:/Users/brent/CLionProjects/TradesKill/timer.c
  C:/Users/brent/CLionProjects/TradesKill/timer.h
+ C:/Users/brent/CLionProjects/TradesKill/tskmath.h
  C:/Users/brent/CLionProjects/TradesKill/utils.h
  C:/Users/brent/CLionProjects/TradesKill/window.h
 CMakeFiles/TradesKill.dir/utils.c.obj

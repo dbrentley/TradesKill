@@ -212,6 +212,9 @@
 		<Unit filename="C:/Users/brent/CLionProjects/TradesKill/timer.h">
 			<Option target="TradesKill"/>
 		</Unit>
+		<Unit filename="C:/Users/brent/CLionProjects/TradesKill/tskmath.h">
+			<Option target="TradesKill"/>
+		</Unit>
 		<Unit filename="C:/Users/brent/CLionProjects/TradesKill/utils.c">
 			<Option target="TradesKill"/>
 		</Unit>

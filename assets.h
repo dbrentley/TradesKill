@@ -14,7 +14,6 @@
 typedef struct asset_t asset_t;
 
 typedef void (*asset_update_f)(asset_t *);
-void func(void (*f)(int));
 
 typedef enum { N, E, S, W } asset_facing_e;
 
@@ -53,8 +52,12 @@ void asset_init(int n);
 
 void assets_destroy();
 
-asset_t *asset_create(sprite_type_e type, const char *name, float x, float y,
-                      animation_type_e default_animation, bool one_shot);
+int get_next_asset_slot();
+
+typedef void (*asset_init_ptr)(asset_t *asset);
+asset_t *asset_create(asset_init_ptr asset_init, const char *name, float x,
+                      float y, animation_type_e default_animation,
+                      bool one_shot);
 
 void asset_move(asset_t *asset, asset_facing_e facing);
 

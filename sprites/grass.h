@@ -8,11 +8,11 @@
 #include "../assets.h"
 #include <stdlib.h>
 
-void grass_update(asset_t *asset) {
+static void grass_update(asset_t *asset) {
     // hello
 }
 
-void grass_init(asset_t *asset) {
+static void grass_init(asset_t *asset) {
     asset->sprite = sprite_create(GRASS);
     int r = (rand() % 15);
     int rg = 0;

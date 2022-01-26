@@ -43,6 +43,7 @@ CMakeFiles/TradesKill.dir/assets.c.obj: \
  ../state.h \
  ../system.h \
  ../timer.h \
+ ../tskmath.h \
  ../utils.h \
  ../window.h
 CMakeFiles/TradesKill.dir/atlas.c.obj: \
@@ -76,6 +77,8 @@ CMakeFiles/TradesKill.dir/game.c.obj: \
  ../linmath.h \
  ../queue.h \
  ../sprite.h \
+ ../sprites/grass.h \
+ ../sprites/ore.h \
  ../state.h \
  ../system.h \
  ../timer.h \
@@ -127,9 +130,11 @@ CMakeFiles/TradesKill.dir/main.c.obj: \
  ../queue.h \
  ../shader.h \
  ../sprite.h \
+ ../sprites/hero.h \
  ../state.h \
  ../system.h \
  ../timer.h \
+ ../tskmath.h \
  ../window.h
 CMakeFiles/TradesKill.dir/mouse.c.obj: \
  ../lib/include/GL/glew.h \
@@ -148,6 +153,7 @@ CMakeFiles/TradesKill.dir/mouse.c.obj: \
  ../state.h \
  ../system.h \
  ../timer.h \
+ ../tskmath.h \
  ../utils.h \
  ../window.h
 CMakeFiles/TradesKill.dir/queue.c.obj: \
@@ -183,6 +189,7 @@ CMakeFiles/TradesKill.dir/sprites/common.c.obj: \
  ../sprite.h \
  ../sprites/common.c \
  ../sprites/common.h \
+ ../sprites/effect_bling.h \
  ../state.h \
  ../system.h \
  ../timer.h \
@@ -225,6 +232,7 @@ CMakeFiles/TradesKill.dir/timer.c.obj: \
  ../system.h \
  ../timer.c \
  ../timer.h \
+ ../tskmath.h \
  ../utils.h \
  ../window.h
 CMakeFiles/TradesKill.dir/utils.c.obj: \

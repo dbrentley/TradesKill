@@ -5,22 +5,44 @@
 #include "timer.h"
 #include "game.h"
 #include "stdlib.h"
+#include "tskmath.h"
 #include "utils.h"
 
 #include <pthread.h>
 #include <stdio.h>
 
 static void *debug_thread() {
-    printf("Cores: %d, Threads: %d, HyperThreading: %s\n",
-           game->system.cpu.n_cores, game->system.cpu.n_threads,
-           game->system.cpu.hyperthreading ? "Yes" : "No");
+    //    printf("Cores: %d, Threads: %d, HyperThreading: %s\n",
+    //           game->system.cpu.n_cores, game->system.cpu.n_threads,
+    //           game->system.cpu.hyperthreading ? "Yes" : "No");
+    //
+    //    printf("FPS: %i, FT: %f, Assets: %d, Mouse: %f, %f, Zoom: %f\n",
+    //           game->timer->fps, game->timer->delta, game->assets_count,
+    //           game->window->mouse_x, game->window->mouse_y, game->window->zoom);
+    //    printf("up: %f, down: %f, left: %f, right: %f\n", game->viewport_bounds.up,
+    //           game->viewport_bounds.down, game->viewport_bounds.left,
+    //           game->viewport_bounds.right);
+    point_2d_t p;
+    p.x = 0.0f;
+    p.y = 0.0f;
 
-    printf("FPS: %i, FT: %f, Assets: %d, Mouse: %f, %f, Zoom: %f\n",
-           game->timer->fps, game->timer->delta, game->assets_count,
-           game->window->mouse_x, game->window->mouse_y, game->window->zoom);
-    printf("up: %f, down: %f, left: %f, right: %f\n", game->viewport_bounds.up,
-           game->viewport_bounds.down, game->viewport_bounds.left,
-           game->viewport_bounds.right);
+    point_2d_t q;
+    q.x = hero->position.x;
+    q.y = hero->position.y;
+
+    vector_2d_t v;
+    v.p = p;
+    v.q = q;
+
+    double pdir = get_vector_2d_direction(v);
+    double pdis = get_vector_2d_distance(v);
+    double pdeg = to_degrees(get_vector_2d_direction(v));
+
+    char title[512];
+    snprintf(title, 511, "dir: %lf, deg: %lf, dis: %lf, x: %lf, y: %lf\n", pdir,
+             pdeg, pdis, hero->position.x, hero->position.y);
+
+    glfwSetWindowTitle(game->window->gl_window, title);
 }
 
 void timer_init() {
@@ -57,4 +79,4 @@ void timer_end() {
     }
 }
 
-void timer_destroy() { ffree(game->timer, "41 timer.c"); }
+void timer_destroy() { ffree(game->timer, "timer.c"); }
